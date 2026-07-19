@@ -1,5 +1,27 @@
 # Notion Schema — Guidance Layer
 
+You’re meant to use it to create a Notion page called “Guidance OS,” then create databases inside it for:    
+                                                                                                               
+  - North Star — your long-term direction and non-negotiables                                                  
+  - Principles — short rules you want surfaced when deciding                                                   
+  - Projects — active work, why it matters, success definition, kill criteria                                  
+  - Decision Frameworks — reusable checklists for career/project/motivation decisions                          
+  - Guidance Corpus — optional supporting notes or research                                                    
+                                                                                                               
+  For each database, recreate the columns listed in the document and add a few real entries. Later, the app’s  
+  Notion sync will read those databases and turn them into AI context.                                         
+                                                                                                               
+  At the project’s current stage, it’s essentially a blueprint/template. You do not need to do it all now; the 
+  minimum useful setup is:                                                                                     
+                                                                                                               
+  1. Create one active North Star.                                                                             
+  2. Add three Principles.                                                                                     
+  3. Add one active Project with its “why,” success criteria, and kill criteria.                               
+  4. Add a Career or Project decision framework.                                                               
+                                                                                                               
+  The app doesn’t yet contain the sync implementation, so creating these Notion databases is preparation rather
+  than a step that will currently make the website work.   
+
 This schema turns Notion into the **source of truth** for your personal decision guidance system. Create one hub page called **Guidance OS** and link the databases below.
 
 ## Hub page structure
