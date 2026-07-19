@@ -9,10 +9,13 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.112.3",
     "@modelcontextprotocol/sdk": "^1.29.0",
     "@neondatabase/serverless": "^1.1.0",
     "@notionhq/client": "^5.23.2",
+    "bcryptjs": "^3.0.3",
     "drizzle-orm": "^0.45.2",
+    "jose": "^6.2.3",
     "next": "16.2.10",
     "openai": "^6.48.0",
     "react": "19.2.4",
