@@ -105,7 +105,7 @@ Tools exposed:
 
 | Tool | Description |
 |------|-------------|
-| `get_guidance` | `mode`: career \| project \| partnership \| motivation; optional `query` |
+| `get_guidance` | `mode`: career \| project \| motivation; optional `query` |
 | `search_guidance` | Full-text search across synced docs |
 
 Connect in Cursor → MCP settings:
@@ -133,8 +133,8 @@ Not built in Phase 1 — architecture only.
 ```
 User on chatgpt.com / claude.ai
   → clicks extension icon
-  → selects mode (career / partnership / …)
-  → extension GET /api/guidance?mode=partnership
+  → selects mode (career / project / motivation)
+  → extension GET /api/guidance?mode=career
   → injects markdown into chat textarea (Unibase-style)
 ```
 

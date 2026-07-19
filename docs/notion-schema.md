@@ -30,7 +30,7 @@ Long-horizon direction: 5-year plan, career vision, life priorities.
 | **Current focus** | Text | No | What you're optimizing for *this year* |
 | **Last reviewed** | Date | Yes | Reminder to re-read when stale |
 | **Tags** | Multi-select | No | `career`, `life`, `financial`, `health` |
-| **Starred** | Checkbox | No | Always include in career/partnership retrieval |
+| **Starred** | Checkbox | No | Always include in career retrieval |
 | **Related projects** | Relation → Projects | No | |
 | **Related principles** | Relation → Principles | No | |
 
@@ -103,19 +103,19 @@ Checklists and templates the AI runs against your docs.
 
 | Property | Notion type | Required | Notes |
 |----------|-------------|----------|-------|
-| **Name** | Title | Yes | e.g. "Partnership Evaluation" |
+| **Name** | Title | Yes | e.g. "Career Evaluation" |
 | **Status** | Select | Yes | `Active`, `Draft`, `Archived` |
-| **Mode** | Select | Yes | `career`, `project`, `partnership`, `motivation` |
+| **Mode** | Select | Yes | `career`, `project`, `motivation` |
 | **Framework** | Text | Yes | Markdown checklist the AI follows |
 | **Priority** | Number | Yes | |
 | **Starred** | Checkbox | No | |
 | **Tags** | Multi-select | No | |
 | **Related principles** | Relation → Principles | No | |
 
-### Example: Partnership Evaluation framework body
+### Example: Career Evaluation framework body
 
 ```markdown
-## Partnership checklist
+## Career checklist
 1. Does this advance my active North Star doc? (cite which one)
 2. Does it violate any starred Principle?
 3. What is the opportunity cost vs my #1 active Project?
@@ -141,7 +141,7 @@ Catch-all for articles, notes, and exports that don't fit other DBs. Sync still 
 | **Type** | Select | Yes | `Note`, `Article`, `Meeting`, `Research`, `Other` |
 | **Status** | Select | Yes | `Active`, `Archived` |
 | **Content summary** | Text | Yes | Your summary — not raw paste |
-| **Modes** | Multi-select | Yes | Which retrieval modes may use this: `career`, `project`, `partnership`, `motivation` |
+| **Modes** | Multi-select | Yes | Which retrieval modes may use this: `career`, `project`, `motivation` |
 | **Priority** | Number | Yes | |
 | **Starred** | Checkbox | No | |
 | **Tags** | Multi-select | No | |
@@ -175,7 +175,7 @@ These are read uniformly during sync:
 ## Setup checklist
 
 1. Duplicate or create the five databases with the properties above.
-2. Add at least one **Active** North Star, three **Active** Principles, and one **Partnership** framework.
+2. Add at least one **Active** North Star, three **Active** Principles, and one **Career** framework.
 3. Share each database with your Notion integration (Settings → Connections → your integration).
 4. Copy database IDs into `.env` (see README).
 5. Run sync from the dashboard or `POST /api/notion/sync`.
@@ -188,7 +188,6 @@ These are read uniformly during sync:
 |------|-------------|-----------|
 | **career** | Starred principles, Active North Star | Frameworks where `Mode = career`, tagged corpus |
 | **project** | Starred + Active projects | Related principles, project frameworks |
-| **partnership** | Partnership frameworks, starred principles | North Star, active projects (opportunity cost) |
 | **motivation** | Active project "Why" fields | Starred principles, North Star summary |
 
 Starred items and `Priority = 1` documents are injected first; lower-priority content fills remaining token budget.

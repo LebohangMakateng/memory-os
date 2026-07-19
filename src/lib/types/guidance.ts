@@ -3,7 +3,6 @@ import { z } from "zod";
 export const decisionModes = [
   "career",
   "project",
-  "partnership",
   "motivation",
 ] as const;
 
@@ -63,13 +62,6 @@ export const modeRetrievalConfig: Record<DecisionMode, ModeRetrievalConfig> = {
     frameworkMode: "project",
     maxDocuments: 10,
     maxTokens: 6000,
-    includeStarredPrinciples: true,
-  },
-  partnership: {
-    documentTypes: ["framework", "principle", "north_star", "project"],
-    frameworkMode: "partnership",
-    maxDocuments: 10,
-    maxTokens: 8000,
     includeStarredPrinciples: true,
   },
   motivation: {

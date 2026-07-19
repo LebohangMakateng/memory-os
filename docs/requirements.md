@@ -27,11 +27,11 @@ You saw an article about **Unibase Memory** — a Chrome extension that captures
 
 ### Goals
 
-1. **Ground decisions in your own writing** — Career moves, partnerships, and project choices should be evaluated against your North Star, principles, and frameworks — with citations to your docs, not generic AI wisdom.
+1. **Ground decisions in your own writing** — Career moves and project choices should be evaluated against your North Star, principles, and frameworks — with citations to your docs, not generic AI wisdom.
 2. **Reduce retrieval friction** — When demotivated or emotional, the system surfaces the right context automatically. You should not have to hunt for the right Notion page.
 3. **Inject context into AI** — Whether you're in Cursor building code or in ChatGPT/Claude in the browser, your guidance corpus should be available without manual copy-paste.
 4. **Sync across devices** — Your guidance layer follows you. Notion remains where you write; the sync hub runs in the cloud.
-5. **Support decision modes** — Different questions need different doc bundles. "Should I take this partnership?" is not the same retrieval as "Why am I doing this project?"
+5. **Support decision modes** — Different questions need different doc bundles. "Should I take this role?" is not the same retrieval as "Why am I doing this project?"
 
 ### Non-Goals
 
@@ -53,14 +53,6 @@ You saw an article about **Unibase Memory** — a Chrome extension that captures
 
 **Expected behavior:** System pulls Active North Star, starred Principles, and career-mode Decision Frameworks. AI responds with alignment score, contradictions quoted from your docs, and a clear recommendation.
 
-### Partnership evaluation
-
-> *As someone who gets partnership offers regularly, I want a structured checklist run against my principles and current project priorities so I don't say yes from FOMO or loneliness.*
-
-**Trigger:** "Someone wants to collaborate on X" / "Should I partner with Y?"
-
-**Expected behavior:** Partnership framework, starred principles (especially FOMO-related), North Star, and active projects for opportunity-cost analysis.
-
 ### Project motivation
 
 > *As someone who gets demotivated mid-project, I want to quickly re-read why I started, what success looks like, and when to kill it — without digging through Notion.*
@@ -68,7 +60,6 @@ You saw an article about **Unibase Memory** — a Chrome extension that captures
 **Trigger:** "Why am I doing this?" / "Should I quit this project?"
 
 **Expected behavior:** Active project's "Why I'm doing this," "Success looks like," and "Kill criteria" fields, plus related principles and North Star link.
-
 ### New project decision
 
 > *As someone with too many ideas, I want to evaluate a new project against my finish-before-starting principles and current focus so I don't abandon what's already in flight.*
@@ -109,7 +100,7 @@ You saw an article about **Unibase Memory** — a Chrome extension that captures
 
 | ID | Requirement |
 |----|-------------|
-| FR-8 | Expose decision modes: `career`, `project`, `partnership`, `motivation`. |
+| FR-8 | Expose decision modes: `career`, `project`, `motivation`. |
 | FR-9 | Assemble context bundles per mode using metadata ranking (starred → priority → type filter). See [notion-schema.md](./notion-schema.md) retrieval table. |
 | FR-10 | Include Decision Frameworks matching the requested mode. |
 | FR-11 | Return formatted markdown with source citations (Notion page title + ID). |
@@ -191,7 +182,6 @@ Each mode defines **what context must appear before the AI answers**. Modes are 
 |------|-------------|----------------|--------------|
 | **career** | Job changes, skill bets, long-horizon direction | Starred principles, Active North Star | Career frameworks, tagged corpus |
 | **project** | Start/stop/continue project decisions | Starred + Active projects | Related principles, project frameworks |
-| **partnership** | Collaboration offers, co-founder talks | Partnership frameworks, starred principles | North Star, active projects (opportunity cost) |
 | **motivation** | Demotivation, forgetting why | Active project "Why" fields | Starred principles, North Star summary |
 
 **Ranking rule:** Starred items and `Priority = 1` documents inject first. Lower-priority content fills remaining token budget.
@@ -229,10 +219,10 @@ All databases live under a **Guidance OS** hub page in Notion.
 
 **Example workflow:**
 
-1. User asks Cursor: "Should I take this partnership offer?"
-2. Agent calls `get_guidance({ mode: "partnership" })`.
-3. API returns North Star excerpt, partnership framework, starred principles, active projects.
-4. Agent evaluates the offer against retrieved docs and cites contradictions.
+1. User asks Cursor: "Should I take this role?"
+2. Agent calls `get_guidance({ mode: "career" })`.
+3. API returns North Star excerpt, career framework, and starred principles.
+4. Agent evaluates the role against retrieved docs and cites contradictions.
 
 ### ChatGPT / Claude in browser (Phase 3)
 
@@ -266,7 +256,7 @@ This validates the workflow before investing in sync infrastructure.
 - Metadata-based retrieval by decision mode.
 - `/api/guidance` API + MCP server for Cursor.
 - Minimal dashboard (modes, sync status).
-- **Success:** Cursor agent pulls your North Star and principles automatically when you ask a career or partnership question.
+- **Success:** Cursor agent pulls your North Star and principles automatically when you ask a career question.
 
 ### Phase 1.5 — Semantic search
 
@@ -280,7 +270,7 @@ This validates the workflow before investing in sync infrastructure.
 - User auth (Clerk/NextAuth), encrypted Notion tokens.
 - Chrome extension for browser AI injection.
 - Optional decision journaling.
-- **Success:** Partnership decision produces a structured Proceed/Pause/Decline with quotes from your own docs.
+- **Success:** A career decision produces a structured Proceed/Pause/Decline with quotes from your own docs.
 
 ### Phase 3 — Proactive guidance
 
@@ -309,7 +299,7 @@ This validates the workflow before investing in sync infrastructure.
 
 You'll know this project succeeded when:
 
-1. **You make fewer emotional career and partnership decisions** — and when you catch yourself, the system surfaced the relevant principle in time.
+1. **You make fewer emotional career decisions** — and when you catch yourself, the system surfaced the relevant principle in time.
 2. **You stop abandoning projects without checking kill criteria** — demotivation triggers a motivation-mode pull, not a silent quit.
 3. **AI advice references your docs, not platitudes** — responses cite your North Star, your principles, your frameworks.
 4. **Context injection takes seconds, not minutes** — no more manual Notion hunting and copy-paste before every AI chat.
@@ -317,10 +307,10 @@ You'll know this project succeeded when:
 
 ### Leading indicators (Phase 1)
 
-- [ ] Notion schema populated with at least 1 North Star, 3 Principles, 1 Partnership framework
+- [ ] Notion schema populated with at least 1 North Star, 3 Principles, 1 Career framework
 - [ ] Sync runs successfully; dashboard shows last sync time
 - [ ] MCP `get_guidance` returns a sensible bundle for each mode
-- [ ] One real decision (career, partnership, or project) evaluated using the system
+- [ ] One real decision (career or project) evaluated using the system
 
 ---
 
