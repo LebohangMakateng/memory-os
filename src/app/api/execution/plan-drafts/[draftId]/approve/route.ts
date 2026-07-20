@@ -1,35 +1,43 @@
-import { eq } from "drizzle-orm";
 import { requireSession } from "@/lib/auth/session";
-import { db } from "@/lib/db/client";
-import { aiPlanningDrafts, milestones, tasks } from "@/lib/db/schema";
+import { getSupabaseAdmin, nowIso } from "@/lib/db/supabase";
 import { planningProposalSchema } from "@/lib/execution/validation";
 
 export const runtime = "nodejs";
 
 export async function POST(_request: Request, context: RouteContext<"/api/execution/plan-drafts/[draftId]/approve">) {
   await requireSession();
-  if (!db) return Response.json({ error: "DATABASE_URL is not configured." }, { status: 503 });
   const { draftId } = await context.params;
-  const [draft] = await db.select().from(aiPlanningDrafts).where(eq(aiPlanningDrafts.id, draftId)).limit(1);
-  if (!draft) return Response.json({ error: "Planning draft not found." }, { status: 404 });
-  if (draft.status !== "pending_review") return Response.json({ error: "This draft has already been reviewed." }, { status: 409 });
-  const proposal = planningProposalSchema.parse(draft.proposal);
+  const supabase = getSupabaseAdmin();
+  const draft = await supabase.from("ai_planning_drafts").select("*").eq("id", draftId).single();
+  if (draft.error) return Response.json({ error: draft.error.message }, { status: draft.error.code === "PGRST116" ? 404 : 500 });
+  if (draft.data.status !== "pending_review") return Response.json({ error: "This draft has already been reviewed." }, { status: 409 });
+
+  const proposal = planningProposalSchema.parse(draft.data.proposal);
   for (const proposedMilestone of proposal.milestones) {
-    const [milestone] = await db.insert(milestones).values({ projectId: draft.targetId, title: proposedMilestone.title, outcome: proposedMilestone.outcome }).returning();
-    await db.insert(tasks).values(proposedMilestone.tasks.map((task) => ({
-      milestoneId: milestone.id,
+    const milestone = await supabase.from("milestones").insert({
+      project_id: draft.data.target_id,
+      title: proposedMilestone.title,
+      outcome: proposedMilestone.outcome,
+    }).select("*").single();
+    if (milestone.error) return Response.json({ error: milestone.error.message }, { status: 500 });
+
+    const taskResult = await supabase.from("tasks").insert(proposedMilestone.tasks.map((task) => ({
+      milestone_id: milestone.data.id,
       title: task.title,
-      nextAction: task.nextAction,
+      next_action: task.nextAction,
       reason: task.reason,
-      expectedOutcome: task.expectedOutcome,
-      estimateMinutes: task.estimateMinutes,
+      expected_outcome: task.expectedOutcome,
+      estimate_minutes: task.estimateMinutes,
       difficulty: 3,
       energy: task.energy,
-      focusType: task.focusType,
+      focus_type: task.focusType,
       impact: task.impact,
-      shareStatus: task.shareRecommendation ? "planned" : "not_applicable",
+      share_status: task.shareRecommendation ? "planned" : "not_applicable",
     })));
+    if (taskResult.error) return Response.json({ error: taskResult.error.message }, { status: 500 });
   }
-  await db.update(aiPlanningDrafts).set({ status: "approved", updatedAt: new Date() }).where(eq(aiPlanningDrafts.id, draft.id));
+
+  const update = await supabase.from("ai_planning_drafts").update({ status: "approved", updated_at: nowIso() }).eq("id", draft.data.id);
+  if (update.error) return Response.json({ error: update.error.message }, { status: 500 });
   return Response.json({ ok: true });
 }

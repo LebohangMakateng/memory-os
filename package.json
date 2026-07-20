@@ -15,12 +15,11 @@
     "@anthropic-ai/sdk": "^0.112.3",
     "@modelcontextprotocol/sdk": "^1.29.0",
     "@notionhq/client": "^5.23.2",
+    "@supabase/supabase-js": "^2.110.7",
     "bcryptjs": "^3.0.3",
-    "drizzle-orm": "^0.45.2",
     "jose": "^6.2.3",
     "next": "16.2.10",
     "openai": "^6.48.0",
-    "postgres": "^3.4.9",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "zod": "^4.4.3"
