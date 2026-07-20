@@ -17,7 +17,7 @@ flowchart TB
     API[API Routes]
     SYNC[Notion Sync Worker]
     RET[Guidance Retrieval]
-    DB[(Neon Postgres)]
+    DB[(Supabase Postgres)]
   end
 
   subgraph clients [AI surfaces]
@@ -48,7 +48,7 @@ flowchart TB
 
 **Why Vercel:** zero-ops deploy, cron for scheduled sync, edge-friendly API routes.
 
-### 2. Neon Postgres + pgvector
+### 2. Supabase Postgres + pgvector
 
 | Table | Role |
 |-------|------|
@@ -63,7 +63,7 @@ flowchart TB
 **Phase 1 retrieval:** keyword + metadata ranking (type, mode, priority, starred).  
 **Phase 1.5:** OpenAI `text-embedding-3-small` → pgvector cosine search.
 
-Enable pgvector on Neon:
+Enable pgvector on Supabase:
 
 ```sql
 CREATE EXTENSION IF NOT EXISTS vector;
@@ -154,7 +154,8 @@ Shared logic with MCP: same `/api/guidance` response shape.
 
 See `.env.example`. Minimum for local dev:
 
-- `DATABASE_URL` — Neon connection string
+- `DATABASE_URL` — Supabase transaction pooler connection string
+- `DATABASE_DIRECT_URL` — Supabase direct connection string for migrations
 - `NOTION_API_KEY` — integration secret
 - `NOTION_DATABASE_*` — four database IDs
 - `GUIDANCE_API_KEY` — for MCP/extension (or generate via `/api/auth`)
@@ -178,7 +179,7 @@ See `.env.example`. Minimum for local dev:
 
 - **Runtime:** Node 22, TypeScript
 - **Framework:** Next.js 16 App Router
-- **ORM:** Drizzle + `@neondatabase/serverless`
+- **ORM:** Drizzle + `postgres.js`
 - **Validation:** Zod
 - **Notion:** `@notionhq/client`
 - **MCP:** `@modelcontextprotocol/sdk`

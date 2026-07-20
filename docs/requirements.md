@@ -145,7 +145,7 @@ You saw an article about **Unibase Memory** — a Chrome extension that captures
 
 ### Cross-device sync
 
-- Guidance index lives in cloud-hosted Postgres (Neon), not only on one machine.
+- Guidance index lives in cloud-hosted Postgres (Supabase), not only on one machine.
 - Notion remains editable from any device; sync hub reflects latest synced state.
 - MCP runs locally but reads from the same cloud API as the extension.
 
@@ -170,7 +170,7 @@ You saw an article about **Unibase Memory** — a Chrome extension that captures
 
 ### Cost
 
-- Target free/low-cost tier: Vercel hobby, Neon free tier, Notion free plan sufficient for Phase 1.
+- Target free/low-cost tier: Vercel hobby, Supabase free tier, Notion free plan sufficient for Phase 1.
 
 ---
 
@@ -252,7 +252,7 @@ This validates the workflow before investing in sync infrastructure.
 
 ### Phase 1 — Custom sync + retrieval + MCP *(current build)*
 
-- Next.js on Vercel, Neon Postgres, Notion sync pipeline.
+- Next.js on Vercel, Supabase Postgres, Notion sync pipeline.
 - Metadata-based retrieval by decision mode.
 - `/api/guidance` API + MCP server for Cursor.
 - Minimal dashboard (modes, sync status).

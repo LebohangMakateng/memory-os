@@ -1,9 +1,9 @@
-import { neon } from "@neondatabase/serverless";
-import { drizzle } from "drizzle-orm/neon-http";
+import { drizzle } from "drizzle-orm/postgres-js";
+import postgres from "postgres";
 import * as schema from "@/lib/db/schema";
 
 const databaseUrl = process.env.DATABASE_URL;
 
 export const db = databaseUrl
-  ? drizzle(neon(databaseUrl), { schema })
+  ? drizzle(postgres(databaseUrl, { prepare: false }), { schema })
   : null;

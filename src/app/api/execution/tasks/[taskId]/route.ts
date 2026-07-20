@@ -6,7 +6,7 @@ import { taskStatusSchema } from "@/lib/execution/validation";
 
 export const runtime = "nodejs";
 
-export async function PATCH(request: Request, context: RouteContext<"/api/execution/tasks/[taskId]") ) {
+export async function PATCH(request: Request, context: RouteContext<"/api/execution/tasks/[taskId]">) {
   await requireSession();
   if (!db) return Response.json({ error: "DATABASE_URL is not configured." }, { status: 503 });
   const { taskId } = await context.params;

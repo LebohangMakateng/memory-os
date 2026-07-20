@@ -24,7 +24,7 @@ The dashboard keeps this principle visible. Claude receives it as a permanent in
 
 ## Cycle 1 Scope
 
-- Private, single-user Next.js application deployed on Vercel with Neon Postgres.
+- Private, single-user Next.js application deployed on Vercel with Supabase Postgres.
 - Dashboard, Vision & Goals, Initiatives, Projects, Weekly Planning, and Opportunity Inbox.
 - A hard maximum of five ordered weekly priorities.
 - Tasks carry effort, energy, focus type, impact dimensions, an explicit reason, expected outcome, and a full link to the hierarchy above.
