@@ -155,7 +155,6 @@ Shared logic with MCP: same `/api/guidance` response shape.
 See `.env.example`. Minimum for local dev:
 
 - `DATABASE_URL` — Supabase transaction pooler connection string
-- `DATABASE_DIRECT_URL` — Supabase direct connection string for migrations
 - `NOTION_API_KEY` — integration secret
 - `NOTION_DATABASE_*` — four database IDs
 - `GUIDANCE_API_KEY` — for MCP/extension (or generate via `/api/auth`)

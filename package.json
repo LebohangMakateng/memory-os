@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "db:migrate": "supabase db push",
+    "db:link": "supabase link --project-ref codlssgtqxnpqnfjzxef",
+    "db:migration:new": "supabase migration new"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.112.3",
@@ -28,7 +31,6 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "dotenv": "^17.4.2",
-    "drizzle-kit": "^0.31.10",
     "eslint": "^9",
     "eslint-config-next": "16.2.10",
     "tailwindcss": "^4",
