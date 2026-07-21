@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { WeeklyTaskManager } from "./weekly-task-manager";
 
 type Target = { id: string; label: string; done: boolean };
 type DayPlan = { day: string; build: string; post: string; notes: string; shipped: string; messages: string; contacted: string; responses: string; review: string };
@@ -413,6 +414,8 @@ export function WeeklyPlannerForm({ starterTargets, milestones, priorities, task
           <span><span className="block text-[10px] font-bold uppercase tracking-[.14em] text-[#64726b]">Weekly dashboard</span><span className="mt-2 block font-serif text-2xl text-[#16231e]">Execution OS</span></span>
           <span className="grid size-10 shrink-0 place-items-center rounded-lg bg-[#163c30] text-white"><ChevronDownIcon /></span>
         </button>}
+
+        <WeeklyTaskManager milestones={milestones} priorities={priorities} tasks={tasks} />
 
         {weeklyTargetsOpen ? <article className="rounded-2xl border border-[#dce4dd] bg-white p-6">
           <div className="mb-4 flex items-center justify-between gap-3">

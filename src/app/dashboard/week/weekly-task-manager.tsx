@@ -167,7 +167,7 @@ export function WeeklyTaskManager({ milestones, priorities, tasks }: { milestone
     });
   }
 
-  return <section className="mt-8 grid gap-6">
+  return <section className="grid gap-6">
     {tasksOpen ? <article className="rounded-2xl border border-[#dce4dd] bg-white p-6">
       <div className="mb-5 flex flex-wrap items-start justify-between gap-3">
         <div><p className="text-[10px] font-bold tracking-[.14em] text-[#64726b]">TASKS</p><h2 className="mt-2 font-serif text-2xl text-[#16231e]">Weekly tasks</h2></div>
