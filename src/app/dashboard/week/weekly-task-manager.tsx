@@ -78,6 +78,7 @@ function TaskFields({ milestones, priorities, task }: { milestones: Milestone[];
 
 export function WeeklyTaskManager({ milestones, priorities, tasks }: { milestones: Milestone[]; priorities: Priority[]; tasks: Task[] }) {
   const router = useRouter();
+  const [addingTask, setAddingTask] = useState(false);
   const [editingId, setEditingId] = useState("");
   const [pendingId, setPendingId] = useState("");
   const [error, setError] = useState("");
@@ -93,6 +94,7 @@ export function WeeklyTaskManager({ milestones, priorities, tasks }: { milestone
       try {
         await parseJson(await fetch("/api/execution/tasks", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(taskPayload(form)) }));
         form.reset();
+        setAddingTask(false);
         router.refresh();
       } catch (caught) {
         setError(caught instanceof Error ? caught.message : "Could not create task.");
@@ -149,12 +151,15 @@ export function WeeklyTaskManager({ milestones, priorities, tasks }: { milestone
   }
 
   return <section className="mt-8 grid gap-6">
-    <form className="grid gap-4 rounded-2xl border border-[#dce4dd] bg-white p-7" onSubmit={createTask}>
-      <div><p className="text-[10px] font-bold tracking-[.14em] text-[#64726b]">TASKS</p><h2 className="mt-2 font-serif text-2xl">Add weekly task</h2></div>
+    {addingTask ? <form className="grid gap-4 rounded-2xl border border-[#dce4dd] bg-white p-7" onSubmit={createTask}>
+      <div className="flex flex-wrap items-start justify-between gap-3"><div><p className="text-[10px] font-bold tracking-[.14em] text-[#64726b]">TASKS</p><h2 className="mt-2 font-serif text-2xl">Add weekly task</h2></div><button className={secondaryButton} onClick={() => setAddingTask(false)} type="button">Cancel</button></div>
       <TaskFields milestones={milestones} priorities={priorities} />
       <button className={primaryButton} disabled={pending || !milestones.length} type="submit">{pending ? "Saving..." : "Create task"}</button>
       {!milestones.length ? <p className="text-sm text-[#64726b]">Create a project milestone before adding tasks.</p> : null}
-    </form>
+    </form> : <button className="flex items-center justify-between rounded-2xl border border-[#dce4dd] bg-white p-7 text-left" onClick={() => setAddingTask(true)} type="button">
+      <span><span className="block text-[10px] font-bold tracking-[.14em] text-[#64726b]">TASKS</span><span className="mt-2 block font-serif text-2xl text-[#16231e]">Add weekly task</span></span>
+      <span className="rounded-lg bg-[#163c30] px-4 py-2 text-sm font-bold text-white">Add</span>
+    </button>}
     <div className="grid gap-3">
       {tasks.length ? tasks.map((task) => {
         const milestone = milestoneById.get(task.milestoneId);
