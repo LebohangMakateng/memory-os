@@ -13,6 +13,11 @@ export const opportunitySchema = z.object({
   note: z.string().trim().max(4000).optional(),
 });
 
+export const quickNoteSchema = z.object({
+  title: z.string().trim().min(1).max(160),
+  notes: z.string().trim().min(1).max(12000),
+});
+
 export const opportunityUpdateSchema = z.object({
   title: z.string().trim().min(1).max(160).optional(),
   note: z.string().trim().max(4000).nullable().optional(),

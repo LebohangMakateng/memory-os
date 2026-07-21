@@ -324,10 +324,22 @@ export function WeeklyPlannerForm({ starterTargets, milestones, priorities, task
             weekLabel: formatWeekLabel(currentWeekStart),
             context: { milestones, priorities, tasks: compactTasks(tasks) },
           }),
-        })) as { status: "needs_clarification"; message: string; questions: string[] } | { status: "ready"; message: string; draft: AiDraft };
+        })) as { status: "needs_clarification"; message: string; questions: string[] } | { status: "ready"; message: string; draft: AiDraft } | { status: "answer"; message: string } | { status: "task_updates_applied"; message: string };
 
         if (result.status === "needs_clarification") {
           setAiMessages([...nextMessages, { role: "assistant", content: `${result.message}\n\n${result.questions.map((question) => `- ${question}`).join("\n")}` }]);
+          return;
+        }
+
+        if (result.status === "answer") {
+          setAiMessages([...nextMessages, { role: "assistant", content: result.message }]);
+          return;
+        }
+
+        if (result.status === "task_updates_applied") {
+          setAiMessages([...nextMessages, { role: "assistant", content: result.message }]);
+          setSaveMessage("AI updated weekly tasks.");
+          router.refresh();
           return;
         }
 
