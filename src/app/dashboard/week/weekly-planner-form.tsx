@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { WeeklyTaskManager } from "./weekly-task-manager";
+import { WeeklyTaskManager, type WeeklyTaskManagerTask } from "./weekly-task-manager";
 
 type Target = { id: string; label: string; done: boolean };
 type DayPlan = { day: string; build: string; post: string; notes: string; shipped: string; messages: string; contacted: string; responses: string; review: string };
@@ -24,7 +24,7 @@ type WeeklyPlanPayload = {
 };
 type Milestone = { id: string; projectId: string; title: string; outcome: string };
 type Priority = { id: string; title: string; projectId: string | null; rank: number };
-type Task = { id: string; milestoneId: string; weeklyPriorityId: string | null; title: string; nextAction: string; status: string };
+type Task = WeeklyTaskManagerTask;
 type ChatMessage = { role: "user" | "assistant"; content: string };
 type ProposedTask = {
   milestoneId: string;

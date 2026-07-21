@@ -6,7 +6,8 @@ import { statusLabel } from "../_components/format";
 
 type Milestone = { id: string; projectId: string; title: string; outcome: string };
 type Priority = { id: string; title: string; projectId: string | null; rank: number };
-type Task = { id: string; milestoneId: string; weeklyPriorityId: string | null; title: string; description: string | null; nextAction: string; reason: string; expectedOutcome: string; status: string; dueDate: Date | null; estimateMinutes: number; difficulty: number; energy: string; focusType: string; shareStatus: string };
+export type WeeklyTaskManagerTask = { id: string; milestoneId: string; weeklyPriorityId: string | null; title: string; description: string | null; nextAction: string; reason: string; expectedOutcome: string; status: string; dueDate: Date | null; estimateMinutes: number; difficulty: number; energy: string; focusType: string; shareStatus: string };
+type Task = WeeklyTaskManagerTask;
 
 const inputClass = "rounded-lg border border-[#cad5cb] bg-white px-3 py-2 text-sm";
 const textAreaClass = inputClass + " min-h-16";
