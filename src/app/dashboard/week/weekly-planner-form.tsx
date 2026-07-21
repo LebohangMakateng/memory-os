@@ -155,6 +155,21 @@ function MultiField({ label, value, onChange, rows = 3, placeholder }: { label: 
     <textarea className="min-h-24 w-full rounded-lg border border-[#dce4dd] bg-white px-3 py-2 text-sm leading-6 outline-none focus:border-[#163c30] focus:ring-2 focus:ring-[#d8ef61]" onChange={(event) => onChange(event.target.value)} placeholder={placeholder} rows={rows} value={value} />
   </label>;
 }
+function ChevronDownIcon() {
+  return <svg aria-hidden="true" className="size-4" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6" /></svg>;
+}
+
+function ChevronUpIcon() {
+  return <svg aria-hidden="true" className="size-4" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24"><path d="m18 15-6-6-6 6" /></svg>;
+}
+
+function XIcon() {
+  return <svg aria-hidden="true" className="size-4" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>;
+}
+
+function ArrowLeftIcon() {
+  return <svg aria-hidden="true" className="size-4" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7" /><path d="M19 12H5" /></svg>;
+}
 
 function createInitialPlan(starterTargets: Target[], weekStart: string): WeeklyPlanPayload {
   return {
@@ -210,7 +225,11 @@ export function WeeklyPlannerForm({ starterTargets, milestones, priorities, task
   const [plan, setPlan] = useState<WeeklyPlanPayload>(() => createInitialPlan(starterTargets, currentWeekStart));
   const [saveMessage, setSaveMessage] = useState("");
   const [error, setError] = useState("");
+  const [dashboardOpen, setDashboardOpen] = useState(true);
+  const [weeklyTargetsOpen, setWeeklyTargetsOpen] = useState(false);
   const [dailyLogOpen, setDailyLogOpen] = useState(false);
+  const [outreachOpen, setOutreachOpen] = useState(false);
+  const [rulesOpen, setRulesOpen] = useState(false);
   const [openDays, setOpenDays] = useState<Set<string>>(() => new Set());
   const [pending, startTransition] = useTransition();
   const [aiOpen, setAiOpen] = useState(false);
@@ -343,7 +362,7 @@ export function WeeklyPlannerForm({ starterTargets, milestones, priorities, task
         <p className="text-[10px] font-bold uppercase tracking-[.14em] text-[#64726b]">AI weekly planner</p>
         <h2 className="mt-2 font-serif text-2xl">Describe this week</h2>
       </div>
-      <button className="rounded-lg border border-[#cad5cb] px-3 py-2 text-xs font-bold text-[#163c30]" onClick={() => setAiOpen(false)} type="button">Hide</button>
+      <button aria-label="Hide AI planner" className="grid size-9 place-items-center rounded-lg border border-[#cad5cb] text-[#163c30]" onClick={() => setAiOpen(false)} title="Hide AI planner" type="button"><XIcon /></button>
     </div>
 
     <div className="grid max-h-[34rem] gap-3 overflow-auto rounded-xl bg-[#f5f7f2] p-4">
@@ -360,7 +379,7 @@ export function WeeklyPlannerForm({ starterTargets, milestones, priorities, task
       </label>
       <div className="flex flex-wrap gap-2">
         <button className="rounded-lg bg-[#163c30] px-4 py-3 text-sm font-bold text-white disabled:opacity-60" disabled={aiPending} onClick={approveAiDraft} type="button">{aiPending ? "Applying..." : "Approve and apply"}</button>
-        <button className="rounded-lg border border-[#cad5cb] px-4 py-3 text-sm font-bold text-[#163c30]" onClick={() => setAiDraftText("")} type="button">Back to chat</button>
+        <button aria-label="Back to chat" className="grid size-11 place-items-center rounded-lg border border-[#cad5cb] text-[#163c30]" onClick={() => setAiDraftText("")} title="Back to chat" type="button"><ArrowLeftIcon /></button>
       </div>
     </div>}
     {aiError ? <p className="text-sm font-bold text-red-700">{aiError}</p> : null}
@@ -369,31 +388,36 @@ export function WeeklyPlannerForm({ starterTargets, milestones, priorities, task
   return <section className={aiOpen ? "grid gap-6 xl:grid-cols-[minmax(530px,1fr)_minmax(530px,1fr)]" : "grid gap-6"}>
     {aiOpen ? aiPanel : null}
     <div className="grid gap-6">
-        <article className="rounded-2xl border border-[#dce4dd] bg-white p-6">
+        {dashboardOpen ? <article className="rounded-2xl border border-[#dce4dd] bg-white p-6">
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div>
               <p className="text-[10px] font-bold uppercase tracking-[.14em] text-[#64726b]">Weekly dashboard</p>
               <h2 className="mt-2 font-serif text-2xl">Execution OS</h2>
             </div>
-            <button className="rounded-lg bg-[#163c30] px-4 py-3 text-sm font-bold text-white disabled:opacity-60" disabled={pending} onClick={savePlan} type="button">{pending ? "Saving..." : "Save weekly plan"}</button>
+            <div className="flex flex-wrap gap-2">
+              <button className="rounded-lg bg-[#163c30] px-4 py-3 text-sm font-bold text-white disabled:opacity-60" disabled={pending} onClick={savePlan} type="button">{pending ? "Saving..." : "Save weekly plan"}</button>
+              <button aria-label="Hide weekly dashboard" className="grid size-11 place-items-center rounded-lg border border-[#cad5cb] text-[#163c30]" onClick={() => setDashboardOpen(false)} title="Hide weekly dashboard" type="button"><ChevronUpIcon /></button>
+            </div>
           </div>
           {saveMessage ? <p className="mt-3 text-sm font-bold text-[#3d6729]">{saveMessage}</p> : null}
           {error ? <p className="mt-3 text-sm font-bold text-red-700">{error}</p> : null}
-          <div className="mt-5 grid gap-4 md:grid-cols-2">
+          <div className="mt-5 grid gap-4">
             <Field label="Week" readOnly value={plan.weekLabel} />
-            <Field label="Focus" onChange={(focus) => updatePlan({ focus })} value={plan.focus} />
           </div>
           <div className="mt-4 grid gap-4">
             <MultiField label="Focus bullets" onChange={(value) => updatePlan({ focusBullets: textToLines(value) })} rows={3} value={linesToText(plan.focusBullets)} />
             <Field label="Main build" onChange={(mainBuild) => updatePlan({ mainBuild })} value={plan.mainBuild} />
             <MultiField label="Definition of done by Friday" onChange={(value) => updatePlan({ definitionOfDone: textToLines(value) })} rows={5} value={linesToText(plan.definitionOfDone)} />
           </div>
-        </article>
+        </article> : <button className="flex items-center justify-between gap-4 rounded-2xl border border-[#dce4dd] bg-white p-6 text-left" onClick={() => setDashboardOpen(true)} type="button">
+          <span><span className="block text-[10px] font-bold uppercase tracking-[.14em] text-[#64726b]">Weekly dashboard</span><span className="mt-2 block font-serif text-2xl text-[#16231e]">Execution OS</span></span>
+          <span className="grid size-10 shrink-0 place-items-center rounded-lg bg-[#163c30] text-white"><ChevronDownIcon /></span>
+        </button>}
 
-        <article className="rounded-2xl border border-[#dce4dd] bg-white p-6">
+        {weeklyTargetsOpen ? <article className="rounded-2xl border border-[#dce4dd] bg-white p-6">
           <div className="mb-4 flex items-center justify-between gap-3">
             <h2 className="font-serif text-2xl">Weekly targets</h2>
-            <button className="rounded-lg border border-[#cad5cb] px-3 py-2 text-xs font-bold text-[#163c30]" onClick={() => updatePlan({ weeklyTargets: [...plan.weeklyTargets, { id: nextId(), label: "", done: false }] })} type="button">Add target</button>
+            <div className="flex gap-2"><button className="rounded-lg border border-[#cad5cb] px-3 py-2 text-xs font-bold text-[#163c30]" onClick={() => updatePlan({ weeklyTargets: [...plan.weeklyTargets, { id: nextId(), label: "", done: false }] })} type="button">Add target</button><button aria-label="Hide weekly targets" className="grid size-9 place-items-center rounded-lg border border-[#cad5cb] text-[#163c30]" onClick={() => setWeeklyTargetsOpen(false)} title="Hide weekly targets" type="button"><ChevronUpIcon /></button></div>
           </div>
           <div className="grid gap-3">
             {plan.weeklyTargets.map((target) => <div className="grid gap-3 rounded-lg bg-[#f5f7f2] p-3 md:grid-cols-[auto_1fr]" key={target.id}>
@@ -401,17 +425,20 @@ export function WeeklyPlannerForm({ starterTargets, milestones, priorities, task
               <input className="h-10 rounded-lg border border-[#dce4dd] bg-white px-3 text-sm outline-none focus:border-[#163c30] focus:ring-2 focus:ring-[#d8ef61]" onChange={(event) => updateTarget(target.id, { label: event.target.value })} value={target.label} />
             </div>)}
           </div>
-        </article>
+        </article> : <button className="flex items-center justify-between rounded-2xl border border-[#dce4dd] bg-white p-6 text-left" onClick={() => setWeeklyTargetsOpen(true)} type="button">
+          <span className="font-serif text-2xl text-[#16231e]">Weekly targets</span>
+          <span className="grid size-10 place-items-center rounded-lg bg-[#163c30] text-white"><ChevronDownIcon /></span>
+        </button>}
 
         {dailyLogOpen ? <article className="rounded-2xl border border-[#dce4dd] bg-white p-6">
-          <div className="flex flex-wrap items-start justify-between gap-3"><div><p className="text-[10px] font-bold tracking-[.14em] text-[#64726b]">EXECUTION</p><h2 className="mt-2 font-serif text-2xl">Daily execution log</h2></div><button className="rounded-lg border border-[#cad5cb] px-3 py-2 text-xs font-bold text-[#163c30]" onClick={() => setDailyLogOpen(false)} type="button">Collapse</button></div>
+          <div className="flex flex-wrap items-start justify-between gap-3"><div><p className="text-[10px] font-bold tracking-[.14em] text-[#64726b]">EXECUTION</p><h2 className="mt-2 font-serif text-2xl">Daily execution log</h2></div><button aria-label="Hide daily execution log" className="grid size-9 place-items-center rounded-lg border border-[#cad5cb] text-[#163c30]" onClick={() => setDailyLogOpen(false)} title="Hide daily execution log" type="button"><ChevronUpIcon /></button></div>
           <div className="mt-5 grid gap-4">
             {plan.dailyLog.map((day) => {
               const dayOpen = openDays.has(day.day);
               return <section className="rounded-xl border border-[#dce4dd] bg-[#f5f7f2] p-4" key={day.day}>
                 <button className="flex w-full items-center justify-between text-left" onClick={() => toggleDay(day.day)} type="button">
                   <span className="font-bold">{dayLabel(day.day)}</span>
-                  <span className="rounded-lg border border-[#cad5cb] bg-white px-3 py-1 text-xs font-bold text-[#163c30]">{dayOpen ? "Collapse" : "Expand"}</span>
+                  <span className="grid size-8 place-items-center rounded-lg border border-[#cad5cb] bg-white text-[#163c30]">{dayOpen ? <ChevronUpIcon /> : <ChevronDownIcon />}</span>
                 </button>
                 {dayOpen ? day.day === "Saturday" ? <div className="mt-3 grid gap-3 md:grid-cols-3">
                   <Field label="Messages sent" onChange={(messages) => updateDay(day.day, { messages })} value={day.messages} />
@@ -427,13 +454,13 @@ export function WeeklyPlannerForm({ starterTargets, milestones, priorities, task
           </div>
         </article> : <button className="flex items-center justify-between rounded-2xl border border-[#dce4dd] bg-white p-6 text-left" onClick={() => setDailyLogOpen(true)} type="button">
           <span><span className="block text-[10px] font-bold tracking-[.14em] text-[#64726b]">EXECUTION</span><span className="mt-2 block font-serif text-2xl text-[#16231e]">Daily execution log</span></span>
-          <span className="rounded-lg bg-[#163c30] px-4 py-2 text-sm font-bold text-white">Expand</span>
+          <span className="grid size-10 place-items-center rounded-lg bg-[#163c30] text-white"><ChevronDownIcon /></span>
         </button>}
 
-        <article className="rounded-2xl border border-[#dce4dd] bg-white p-6">
+        {outreachOpen ? <article className="rounded-2xl border border-[#dce4dd] bg-white p-6">
           <div className="mb-4 flex items-center justify-between gap-3">
             <h2 className="font-serif text-2xl">Outreach tracker</h2>
-            <button className="rounded-lg border border-[#cad5cb] px-3 py-2 text-xs font-bold text-[#163c30]" onClick={() => updatePlan({ outreachTracker: [...plan.outreachTracker, { id: plan.outreachTracker.length + 1, name: "", platform: "", messageSent: "", response: "", followUp: "" }] })} type="button">Add row</button>
+            <div className="flex gap-2"><button className="rounded-lg border border-[#cad5cb] px-3 py-2 text-xs font-bold text-[#163c30]" onClick={() => updatePlan({ outreachTracker: [...plan.outreachTracker, { id: plan.outreachTracker.length + 1, name: "", platform: "", messageSent: "", response: "", followUp: "" }] })} type="button">Add row</button><button aria-label="Hide outreach tracker" className="grid size-9 place-items-center rounded-lg border border-[#cad5cb] text-[#163c30]" onClick={() => setOutreachOpen(false)} title="Hide outreach tracker" type="button"><ChevronUpIcon /></button></div>
           </div>
           <div className="grid gap-3">
             {plan.outreachTracker.map((row) => <div className="grid gap-2 rounded-lg bg-[#f5f7f2] p-3 md:grid-cols-5" key={row.id}>
@@ -444,10 +471,13 @@ export function WeeklyPlannerForm({ starterTargets, milestones, priorities, task
               <input aria-label="Follow-up" className="h-10 rounded-lg border border-[#dce4dd] px-3 text-sm" onChange={(event) => updateOutreach(row.id, { followUp: event.target.value })} placeholder="Follow-up" value={row.followUp} />
             </div>)}
           </div>
-        </article>
+        </article> : <button className="flex items-center justify-between rounded-2xl border border-[#dce4dd] bg-white p-6 text-left" onClick={() => setOutreachOpen(true)} type="button">
+          <span className="font-serif text-2xl text-[#16231e]">Outreach tracker</span>
+          <span className="grid size-10 place-items-center rounded-lg bg-[#163c30] text-white"><ChevronDownIcon /></span>
+        </button>}
 
-        <article className="rounded-2xl border border-[#dce4dd] bg-white p-6">
-          <h2 className="font-serif text-2xl">Rules and fear check</h2>
+        {rulesOpen ? <article className="rounded-2xl border border-[#dce4dd] bg-white p-6">
+          <div className="flex flex-wrap items-start justify-between gap-3"><h2 className="font-serif text-2xl">Rules and fear check</h2><button aria-label="Hide rules and fear check" className="grid size-9 place-items-center rounded-lg border border-[#cad5cb] text-[#163c30]" onClick={() => setRulesOpen(false)} title="Hide rules and fear check" type="button"><ChevronUpIcon /></button></div>
           <div className="mt-4 grid gap-4 lg:grid-cols-[.8fr_1.2fr]">
             <MultiField label="Rules" onChange={(value) => updatePlan({ rules: textToLines(value) })} rows={4} value={linesToText(plan.rules)} />
             <div className="grid gap-3">
@@ -455,7 +485,10 @@ export function WeeklyPlannerForm({ starterTargets, milestones, priorities, task
               <MultiField label="Smallest action I can take right now" onChange={(smallestAction) => updatePlan({ fearCheck: { ...plan.fearCheck, smallestAction } })} rows={2} value={plan.fearCheck.smallestAction} />
             </div>
           </div>
-        </article>
+        </article> : <button className="flex items-center justify-between rounded-2xl border border-[#dce4dd] bg-white p-6 text-left" onClick={() => setRulesOpen(true)} type="button">
+          <span className="font-serif text-2xl text-[#16231e]">Rules and fear check</span>
+          <span className="grid size-10 place-items-center rounded-lg bg-[#163c30] text-white"><ChevronDownIcon /></span>
+        </button>}
       </div>
   </section>;
 }

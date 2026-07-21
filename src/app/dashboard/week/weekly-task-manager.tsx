@@ -13,6 +13,21 @@ const textAreaClass = inputClass + " min-h-16";
 const labelClass = "grid gap-1 text-xs font-bold text-[#32443a]";
 const primaryButton = "rounded-lg bg-[#163c30] px-4 py-2 text-sm font-bold text-white disabled:opacity-60";
 const secondaryButton = "rounded-lg border border-[#cad5cb] px-3 py-2 text-xs font-bold text-[#163c30] disabled:opacity-60";
+function PlusIcon() {
+  return <svg aria-hidden="true" className="size-4" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24"><path d="M12 5v14" /><path d="M5 12h14" /></svg>;
+}
+
+function XIcon() {
+  return <svg aria-hidden="true" className="size-4" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>;
+}
+
+function ChevronDownIcon() {
+  return <svg aria-hidden="true" className="size-4" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6" /></svg>;
+}
+
+function ChevronUpIcon() {
+  return <svg aria-hidden="true" className="size-4" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24"><path d="m18 15-6-6-6 6" /></svg>;
+}
 
 async function parseJson(response: Response) {
   const body = (await response.json().catch(() => ({}))) as { error?: unknown };
@@ -79,6 +94,7 @@ function TaskFields({ milestones, priorities, task }: { milestones: Milestone[];
 export function WeeklyTaskManager({ milestones, priorities, tasks }: { milestones: Milestone[]; priorities: Priority[]; tasks: Task[] }) {
   const router = useRouter();
   const [addingTask, setAddingTask] = useState(false);
+  const [todosOpen, setTodosOpen] = useState(false);
   const [editingId, setEditingId] = useState("");
   const [pendingId, setPendingId] = useState("");
   const [error, setError] = useState("");
@@ -152,33 +168,42 @@ export function WeeklyTaskManager({ milestones, priorities, tasks }: { milestone
 
   return <section className="mt-8 grid gap-6">
     {addingTask ? <form className="grid gap-4 rounded-2xl border border-[#dce4dd] bg-white p-7" onSubmit={createTask}>
-      <div className="flex flex-wrap items-start justify-between gap-3"><div><p className="text-[10px] font-bold tracking-[.14em] text-[#64726b]">TASKS</p><h2 className="mt-2 font-serif text-2xl">Add weekly task</h2></div><button className={secondaryButton} onClick={() => setAddingTask(false)} type="button">Cancel</button></div>
+      <div className="flex flex-wrap items-start justify-between gap-3"><div><p className="text-[10px] font-bold tracking-[.14em] text-[#64726b]">TASKS</p><h2 className="mt-2 font-serif text-2xl">Add weekly task</h2></div><button aria-label="Close add weekly task form" className="grid size-9 place-items-center rounded-lg border border-[#cad5cb] text-[#163c30]" onClick={() => setAddingTask(false)} title="Close add weekly task form" type="button"><XIcon /></button></div>
       <TaskFields milestones={milestones} priorities={priorities} />
       <button className={primaryButton} disabled={pending || !milestones.length} type="submit">{pending ? "Saving..." : "Create task"}</button>
       {!milestones.length ? <p className="text-sm text-[#64726b]">Create a project milestone before adding tasks.</p> : null}
     </form> : <button className="flex items-center justify-between rounded-2xl border border-[#dce4dd] bg-white p-7 text-left" onClick={() => setAddingTask(true)} type="button">
       <span><span className="block text-[10px] font-bold tracking-[.14em] text-[#64726b]">TASKS</span><span className="mt-2 block font-serif text-2xl text-[#16231e]">Add weekly task</span></span>
-      <span className="rounded-lg bg-[#163c30] px-4 py-2 text-sm font-bold text-white">Add</span>
+      <span className="grid size-10 place-items-center rounded-lg bg-[#163c30] text-white"><PlusIcon /></span>
     </button>}
-    <div className="grid gap-3">
-      {tasks.length ? tasks.map((task) => {
-        const milestone = milestoneById.get(task.milestoneId);
-        const priority = task.weeklyPriorityId ? priorityById.get(task.weeklyPriorityId) : null;
-        const priorityLabel = priority ? " / " + priority.title : "";
-        return <article className="rounded-2xl border border-[#dce4dd] bg-white p-5" key={task.id}>
-          {editingId === task.id ? <form className="grid gap-3" onSubmit={(event) => updateTask(event, task.id)}>
-            <TaskFields milestones={milestones} priorities={priorities} task={task} />
-            <div className="flex flex-wrap gap-2"><button className={primaryButton} disabled={pendingId === task.id} type="submit">{pendingId === task.id ? "Saving..." : "Save"}</button><button className={secondaryButton} onClick={() => setEditingId("")} type="button">Cancel</button></div>
-          </form> : <>
-            <div className="flex flex-wrap items-start justify-between gap-3">
-              <div><p className="text-[10px] font-bold tracking-[.14em] text-[#64726b]">{statusLabel(task.status)} / {task.estimateMinutes} min / {task.energy}</p><h3 className="mt-1 text-base font-bold">{task.title}</h3><p className="mt-1 text-xs text-[#64726b]">{milestone?.title ?? "No milestone"}{priorityLabel}</p></div>
-              <div className="flex flex-wrap gap-2"><button className={secondaryButton} disabled={pendingId === task.id} onClick={() => updateStatus(task.id, task.status === "done" ? "todo" : "done")} type="button">{task.status === "done" ? "Reopen" : "Done"}</button><button className={secondaryButton} onClick={() => setEditingId(task.id)} type="button">Edit</button><button className="rounded-lg border border-[#d7c0bb] px-3 py-2 text-xs font-bold text-[#8f2f1f] disabled:opacity-60" disabled={pendingId === task.id} onClick={() => deleteTask(task.id)} type="button">Delete</button></div>
-            </div>
-            <p className="mt-3 text-sm leading-6 text-[#64726b]">{task.nextAction}</p>
-          </>}
-        </article>;
-      }) : <div className="rounded-2xl border border-[#dce4dd] bg-white p-7 text-sm text-[#64726b]">No tasks yet.</div>}
-    </div>
+    {todosOpen ? <article className="rounded-2xl border border-[#dce4dd] bg-white p-6">
+      <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
+        <div><p className="text-[10px] font-bold tracking-[.14em] text-[#64726b]">TASKS</p><h2 className="mt-2 font-serif text-2xl text-[#16231e]">Todos</h2></div>
+        <button aria-label="Hide todos" className="grid size-9 place-items-center rounded-lg border border-[#cad5cb] text-[#163c30]" onClick={() => setTodosOpen(false)} title="Hide todos" type="button"><ChevronUpIcon /></button>
+      </div>
+      <div className="grid gap-3">
+        {tasks.length ? tasks.map((task) => {
+          const milestone = milestoneById.get(task.milestoneId);
+          const priority = task.weeklyPriorityId ? priorityById.get(task.weeklyPriorityId) : null;
+          const priorityLabel = priority ? " / " + priority.title : "";
+          return <article className="rounded-xl border border-[#dce4dd] bg-[#f5f7f2] p-4" key={task.id}>
+            {editingId === task.id ? <form className="grid gap-3" onSubmit={(event) => updateTask(event, task.id)}>
+              <TaskFields milestones={milestones} priorities={priorities} task={task} />
+              <div className="flex flex-wrap gap-2"><button className={primaryButton} disabled={pendingId === task.id} type="submit">{pendingId === task.id ? "Saving..." : "Save"}</button><button className={secondaryButton} onClick={() => setEditingId("")} type="button">Cancel</button></div>
+            </form> : <>
+              <div className="flex flex-wrap items-start justify-between gap-3">
+                <div><p className="text-[10px] font-bold tracking-[.14em] text-[#64726b]">{statusLabel(task.status)} / {task.estimateMinutes} min / {task.energy}</p><h3 className="mt-1 text-base font-bold">{task.title}</h3><p className="mt-1 text-xs text-[#64726b]">{milestone?.title ?? "No milestone"}{priorityLabel}</p></div>
+                <div className="flex flex-wrap gap-2"><button className={secondaryButton} disabled={pendingId === task.id} onClick={() => updateStatus(task.id, task.status === "done" ? "todo" : "done")} type="button">{task.status === "done" ? "Reopen" : "Done"}</button><button className={secondaryButton} onClick={() => setEditingId(task.id)} type="button">Edit</button><button className="rounded-lg border border-[#d7c0bb] px-3 py-2 text-xs font-bold text-[#8f2f1f] disabled:opacity-60" disabled={pendingId === task.id} onClick={() => deleteTask(task.id)} type="button">Delete</button></div>
+              </div>
+              <p className="mt-3 text-sm leading-6 text-[#64726b]">{task.nextAction}</p>
+            </>}
+          </article>;
+        }) : <div className="rounded-xl bg-[#f5f7f2] p-4 text-sm text-[#64726b]">No tasks yet.</div>}
+      </div>
+    </article> : <button className="flex items-center justify-between gap-4 rounded-2xl border border-[#dce4dd] bg-white p-7 text-left" onClick={() => setTodosOpen(true)} type="button">
+      <span><span className="block text-[10px] font-bold tracking-[.14em] text-[#64726b]">TASKS</span><span className="mt-2 block font-serif text-2xl text-[#16231e]">Todos</span></span>
+      <span className="grid size-10 shrink-0 place-items-center rounded-lg bg-[#163c30] text-white"><ChevronDownIcon /></span>
+    </button>}
     {error ? <p className="text-sm font-bold text-red-700">{error}</p> : null}
   </section>;
 }
