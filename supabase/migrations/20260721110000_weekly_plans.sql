@@ -1,4 +1,4 @@
-﻿CREATE TABLE "weekly_plans" (
+CREATE TABLE "weekly_plans" (
   "id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
   "week_label" varchar(80) NOT NULL,
   "focus" text NOT NULL,

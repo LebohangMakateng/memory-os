@@ -16,7 +16,7 @@ export const opportunitySchema = z.object({
 export const opportunityUpdateSchema = z.object({
   title: z.string().trim().min(1).max(160).optional(),
   note: z.string().trim().max(4000).nullable().optional(),
-  status: z.enum(["inbox", "reviewed", "archived"]).optional(),
+  status: z.enum(["inbox", "reviewed", "deferred", "archived"]).optional(),
 }).refine((value) => Object.keys(value).length > 0, "At least one field is required.");
 
 
@@ -43,6 +43,28 @@ export const taskStatusSchema = z.object({
   status: z.enum(["todo", "in_progress", "done", "blocked"]),
 });
 
+export const taskCreateSchema = z.object({
+  milestoneId: z.string().uuid(),
+  weeklyPriorityId: z.string().uuid().nullable().optional(),
+  title: z.string().trim().min(1).max(160),
+  description: z.string().trim().max(4000).nullable().optional(),
+  nextAction: z.string().trim().min(1).max(4000),
+  reason: z.string().trim().min(1).max(4000),
+  expectedOutcome: z.string().trim().min(1).max(4000),
+  status: z.enum(["todo", "in_progress", "done", "blocked"]).default("todo"),
+  dueDate: z.string().datetime().nullable().optional(),
+  estimateMinutes: z.number().int().min(15).max(480),
+  difficulty: z.number().int().min(1).max(5).default(3),
+  energy: z.enum(["low", "medium", "high"]),
+  focusType: z.enum(["revenue", "learning", "portfolio", "maintenance"]),
+  impact: impactSchema.default({ revenue: 3, learning: 3, portfolio: 3, automation: 2, enjoyment: 3 }),
+  shareStatus: projectShareStatusSchema.default("planned"),
+  shareChannel: z.string().trim().max(80).nullable().optional(),
+  shareUrl: z.string().trim().url().nullable().or(z.literal("")).optional(),
+});
+
+export const taskUpdateSchema = taskCreateSchema.partial().refine((value) => Object.keys(value).length > 0, "At least one field is required.");
+
 export const planningRequestSchema = z.object({
   projectId: z.string().uuid(),
   instructions: z.string().trim().max(4000).optional(),
@@ -66,6 +88,10 @@ export const planningProposalSchema = z.object({
       shareRecommendation: z.string().trim().max(1000),
     })).min(1),
   })).min(1),
+});
+export const planningDraftUpdateSchema = z.object({
+  proposal: planningProposalSchema,
+  status: z.enum(["pending_review", "approved", "saved"]).optional(),
 });
 
 const weeklyTargetSchema = z.object({
@@ -97,6 +123,7 @@ const outreachRowSchema = z.object({
 
 export const weeklyPlanSchema = z.object({
   id: z.string().uuid().optional(),
+  weekStart: z.string().date(),
   weekLabel: z.string().trim().min(1).max(80),
   focus: z.string().trim().max(4000),
   focusBullets: z.array(z.string().trim().max(1000)).max(10),

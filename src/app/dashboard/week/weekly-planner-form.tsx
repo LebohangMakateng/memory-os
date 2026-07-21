@@ -1,6 +1,6 @@
-﻿"use client";
+"use client";
 
-import { useEffect, useMemo, useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 
 type Target = { id: string; label: string; done: boolean };
 type DayPlan = { day: string; build: string; post: string; notes: string; shipped: string; messages: string; contacted: string; responses: string; review: string };
@@ -8,6 +8,7 @@ type OutreachRow = { id: number; name: string; platform: string; messageSent: st
 type FearCheck = { avoiding: string; smallestAction: string };
 type WeeklyPlanPayload = {
   id?: string;
+  weekStart: string;
   weekLabel: string;
   focus: string;
   focusBullets: string[];
@@ -21,14 +22,17 @@ type WeeklyPlanPayload = {
 };
 
 const defaultRules = ["No new ideas mid-week", "Ship before perfect", "If you build you post", "No zero days"];
-const defaultDays: DayPlan[] = [
-  { day: "Tuesday", build: "SneakerInventory, integrate Cursor SDK into LeboAI.", post: "First LeboAI article? maybe on Wednesday.", notes: "", shipped: "", messages: "", contacted: "", responses: "", review: "" },
-  { day: "Wednesday", build: "SneakerInventory, integrate Cursor SDK into LeboAI.", post: "First LeboAI article, definitely in the morning.", notes: "", shipped: "", messages: "", contacted: "", responses: "", review: "" },
-  { day: "Thursday", build: "SneakerInventory, integrate Cursor SDK into LeboAI.", post: "", notes: "Finalize list of people to contact.", shipped: "", messages: "", contacted: "", responses: "", review: "" },
-  { day: "Friday", build: "", post: "Second LeboAI article, definitely in the morning.", notes: "", shipped: "Link / Demo:", messages: "", contacted: "", responses: "", review: "" },
-  { day: "Saturday", build: "", post: "", notes: "", shipped: "", messages: "", contacted: "", responses: "", review: "" },
-  { day: "Sunday", build: "", post: "", notes: "", shipped: "", messages: "", contacted: "", responses: "", review: "" },
-];
+const defaultDays: DayPlan[] = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"].map((day) => ({
+  day,
+  build: "",
+  post: "",
+  notes: "",
+  shipped: "",
+  messages: "",
+  contacted: "",
+  responses: "",
+  review: "",
+}));
 
 function nextId() {
   return typeof crypto !== "undefined" && "randomUUID" in crypto ? crypto.randomUUID() : `${Date.now()}`;
@@ -42,10 +46,29 @@ function textToLines(value: string) {
   return value.split("\n").map((line) => line.trim()).filter(Boolean);
 }
 
-function Field({ label, value, onChange, placeholder }: { label: string; value: string; onChange: (value: string) => void; placeholder?: string }) {
+function toDateOnly(date: Date) {
+  const year = date.getFullYear();
+  const month = `${date.getMonth() + 1}`.padStart(2, "0");
+  const day = `${date.getDate()}`.padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+function getSundayWeekStart(date: Date) {
+  const start = new Date(date);
+  start.setHours(0, 0, 0, 0);
+  start.setDate(start.getDate() - start.getDay());
+  return toDateOnly(start);
+}
+
+function formatWeekLabel(weekStart: string) {
+  const [year, month, day] = weekStart.split("-").map(Number);
+  return new Date(year, month - 1, day).toLocaleDateString(undefined, { month: "long", day: "numeric", year: "numeric" });
+}
+
+function Field({ label, value, onChange, placeholder, readOnly = false }: { label: string; value: string; onChange?: (value: string) => void; placeholder?: string; readOnly?: boolean }) {
   return <label className="grid gap-2">
     <span className="text-[10px] font-bold uppercase tracking-[.14em] text-[#64726b]">{label}</span>
-    <input className="h-11 rounded-lg border border-[#dce4dd] bg-white px-3 text-sm outline-none focus:border-[#163c30] focus:ring-2 focus:ring-[#d8ef61]" onChange={(event) => onChange(event.target.value)} placeholder={placeholder} value={value} />
+    <input className="h-11 rounded-lg border border-[#dce4dd] bg-white px-3 text-sm outline-none focus:border-[#163c30] focus:ring-2 focus:ring-[#d8ef61] read-only:bg-[#f5f7f2]" onChange={(event) => onChange?.(event.target.value)} placeholder={placeholder} readOnly={readOnly} value={value} />
   </label>;
 }
 
@@ -56,22 +79,18 @@ function MultiField({ label, value, onChange, rows = 3, placeholder }: { label: 
   </label>;
 }
 
-function createInitialPlan(starterTargets: Target[]): WeeklyPlanPayload {
+function createInitialPlan(starterTargets: Target[], weekStart: string): WeeklyPlanPayload {
   return {
-    weekLabel: "May 4, 2026",
-    focus: "What are you building this week?",
-    focusBullets: ["Have a look at Cursor SDK", "Sneaker Inventory or trade platform"],
-    mainBuild: "Sneaker Inventory or trade platform",
-    definitionOfDone: [
-      "Integrate into LeboAI.",
-      "Write article: Cursor released an SDK and I just had to try it out.",
-      "Dev and implement. Vibe code.",
-      "Release and market. Create IG and TikTok account.",
-    ],
+    weekStart,
+    weekLabel: formatWeekLabel(weekStart),
+    focus: "",
+    focusBullets: [],
+    mainBuild: "",
+    definitionOfDone: [],
     weeklyTargets: starterTargets.length ? starterTargets : [
-      { id: "ship", label: "Ship 2 artifacts = LeboAI articles, Cursor integration, SneakerInventory.", done: false },
-      { id: "posts", label: "35 posts = story about Sneaker Inventory.", done: false },
-      { id: "outreach", label: "1020 outreach messages to people I know and random TikTok prospects.", done: false },
+      { id: "ship", label: "", done: false },
+      { id: "posts", label: "", done: false },
+      { id: "outreach", label: "", done: false },
     ],
     dailyLog: defaultDays,
     outreachTracker: [
@@ -94,39 +113,28 @@ async function parseJson(response: Response) {
 }
 
 export function WeeklyPlannerForm({ starterTargets }: { starterTargets: Target[] }) {
-  const [plan, setPlan] = useState<WeeklyPlanPayload>(() => createInitialPlan(starterTargets));
+  const [currentWeekStart] = useState(() => getSundayWeekStart(new Date()));
+  const [plan, setPlan] = useState<WeeklyPlanPayload>(() => createInitialPlan(starterTargets, currentWeekStart));
   const [saveMessage, setSaveMessage] = useState("");
   const [error, setError] = useState("");
   const [pending, startTransition] = useTransition();
 
   useEffect(() => {
     let active = true;
-    fetch("/api/execution/weekly-plan")
+    fetch(`/api/execution/weekly-plan?weekStart=${currentWeekStart}`)
       .then(parseJson)
       .then((savedPlan: WeeklyPlanPayload | null) => {
-        if (active && savedPlan) setPlan(savedPlan);
+        if (!active) return;
+        setPlan(savedPlan ?? createInitialPlan(starterTargets, currentWeekStart));
       })
       .catch((caught) => {
         if (active) setError(caught instanceof Error ? caught.message : "Could not load weekly plan.");
       });
     return () => { active = false; };
-  }, []);
-
-  const markdown = useMemo(() => {
-    const targetLines = plan.weeklyTargets.map((target) => `- [${target.done ? "x" : " "}] ${target.label}`).join("\n");
-    const dayLines = plan.dailyLog.map((day) => {
-      if (day.day === "Friday") return `Friday (Ship Day)\nWhat did you ship? ${day.shipped}\nPost: ${day.post}\nNotes: ${day.notes}`;
-      if (day.day === "Saturday") return `Saturday (Outreach)\nMessages sent: ${day.messages}\nWho you contacted: ${day.contacted}\nResponses: ${day.responses}`;
-      if (day.day === "Sunday") return `Sunday (Review)\nWhat did you ship? ${day.shipped}\nOutreach count: ${day.messages}\nWhat worked / didn't / adjustment: ${day.review}`;
-      return `${day.day}\nBuild: ${day.build}\nPost: ${day.post}\nNotes: ${day.notes}`;
-    }).join("\n\n---\n\n");
-    const rows = plan.outreachTracker.map((row) => `| ${row.name} | ${row.platform} | ${row.messageSent} | ${row.response} | ${row.followUp} |`).join("\n");
-
-    return `# Execution OS\n\n## Weekly Dashboard\n\nWeek: ${plan.weekLabel}\n\nFocus: ${plan.focus}\n\n${plan.focusBullets.map((item) => `- ${item}`).join("\n")}\n\nDefinition of Done (by Friday):\n\n${plan.definitionOfDone.map((item) => `- ${item}`).join("\n")}\n\n### Weekly Targets\n\n${targetLines}\n\n## Daily Execution Log\n\n${dayLines}\n\n## Outreach Tracker\n\n| Name | Platform | Message Sent | Response | Follow-up |\n| --- | --- | --- | --- | --- |\n${rows}\n\n${plan.rules.map((rule) => `- ${rule}`).join("\n")}\n\n## Fear Check\n\nWhat am I avoiding?\n${plan.fearCheck.avoiding}\n\nSmallest action I can take right now:\n${plan.fearCheck.smallestAction}`;
-  }, [plan]);
+  }, [currentWeekStart, starterTargets]);
 
   function updatePlan(patch: Partial<WeeklyPlanPayload>) {
-    setPlan((current) => ({ ...current, ...patch }));
+    setPlan((current) => ({ ...current, ...patch, weekStart: currentWeekStart, weekLabel: formatWeekLabel(currentWeekStart) }));
   }
 
   function updateTarget(id: string, patch: Partial<Target>) {
@@ -149,7 +157,7 @@ export function WeeklyPlannerForm({ starterTargets }: { starterTargets: Target[]
         const savedPlan = await parseJson(await fetch("/api/execution/weekly-plan", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(plan),
+          body: JSON.stringify({ ...plan, weekStart: currentWeekStart, weekLabel: formatWeekLabel(currentWeekStart) }),
         })) as WeeklyPlanPayload;
         setPlan(savedPlan);
         setSaveMessage("Saved weekly plan.");
@@ -159,7 +167,7 @@ export function WeeklyPlannerForm({ starterTargets }: { starterTargets: Target[]
     });
   }
 
-  return <section className="grid gap-6 xl:grid-cols-[minmax(0,1.15fr)_minmax(360px,.85fr)]">
+  return <section className="grid gap-6">
     <div className="grid gap-6">
       <article className="rounded-2xl border border-[#dce4dd] bg-white p-6">
         <div className="flex flex-wrap items-start justify-between gap-3">
@@ -172,7 +180,7 @@ export function WeeklyPlannerForm({ starterTargets }: { starterTargets: Target[]
         {saveMessage ? <p className="mt-3 text-sm font-bold text-[#3d6729]">{saveMessage}</p> : null}
         {error ? <p className="mt-3 text-sm font-bold text-red-700">{error}</p> : null}
         <div className="mt-5 grid gap-4 md:grid-cols-2">
-          <Field label="Week" onChange={(weekLabel) => updatePlan({ weekLabel })} value={plan.weekLabel} />
+          <Field label="Week" readOnly value={plan.weekLabel} />
           <Field label="Focus" onChange={(focus) => updatePlan({ focus })} value={plan.focus} />
         </div>
         <div className="mt-4 grid gap-4">
@@ -199,17 +207,11 @@ export function WeeklyPlannerForm({ starterTargets }: { starterTargets: Target[]
         <h2 className="font-serif text-2xl">Daily execution log</h2>
         <div className="mt-5 grid gap-4">
           {plan.dailyLog.map((day) => <section className="rounded-xl border border-[#dce4dd] bg-[#f5f7f2] p-4" key={day.day}>
-            <h3 className="font-bold">{day.day === "Friday" ? "Friday (Ship Day)" : day.day === "Saturday" ? "Saturday (Outreach)" : day.day === "Sunday" ? "Sunday (Review)" : day.day}</h3>
+            <h3 className="font-bold">{day.day === "Friday" ? "Friday (Ship Day)" : day.day === "Saturday" ? "Saturday (Outreach)" : day.day}</h3>
             {day.day === "Saturday" ? <div className="mt-3 grid gap-3 md:grid-cols-3">
               <Field label="Messages sent" onChange={(messages) => updateDay(day.day, { messages })} value={day.messages} />
               <Field label="Who contacted" onChange={(contacted) => updateDay(day.day, { contacted })} value={day.contacted} />
               <Field label="Responses" onChange={(responses) => updateDay(day.day, { responses })} value={day.responses} />
-            </div> : day.day === "Sunday" ? <div className="mt-3 grid gap-3">
-              <div className="grid gap-3 md:grid-cols-2">
-                <Field label="What shipped" onChange={(shipped) => updateDay(day.day, { shipped })} value={day.shipped} />
-                <Field label="Outreach count" onChange={(messages) => updateDay(day.day, { messages })} value={day.messages} />
-              </div>
-              <MultiField label="What worked, what did not, adjustment" onChange={(review) => updateDay(day.day, { review })} value={day.review} />
             </div> : <div className="mt-3 grid gap-3">
               <MultiField label={day.day === "Friday" ? "What did you ship? Link / Demo" : "Build"} onChange={(value) => updateDay(day.day, day.day === "Friday" ? { shipped: value } : { build: value })} rows={2} value={day.day === "Friday" ? day.shipped : day.build} />
               <MultiField label="Post" onChange={(post) => updateDay(day.day, { post })} rows={2} value={day.post} />
@@ -246,11 +248,5 @@ export function WeeklyPlannerForm({ starterTargets }: { starterTargets: Target[]
         </div>
       </article>
     </div>
-
-    <aside className="h-fit rounded-2xl border border-[#dce4dd] bg-white p-6 xl:sticky xl:top-8">
-      <p className="text-[10px] font-bold uppercase tracking-[.14em] text-[#64726b]">Markdown preview</p>
-      <h2 className="mt-2 font-serif text-2xl">Execution OS</h2>
-      <pre className="mt-5 max-h-[calc(100vh-12rem)] overflow-auto whitespace-pre-wrap rounded-xl bg-[#f5f7f2] p-4 text-sm leading-6 text-[#293831]">{markdown}</pre>
-    </aside>
   </section>;
 }

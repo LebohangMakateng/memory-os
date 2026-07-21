@@ -1,4 +1,4 @@
-﻿import { requireSession } from "@/lib/auth/session";
+import { requireSession } from "@/lib/auth/session";
 import { getSupabaseAdmin, nowIso } from "@/lib/db/supabase";
 import { weeklyPlanSchema } from "@/lib/execution/validation";
 
@@ -6,6 +6,7 @@ export const runtime = "nodejs";
 
 type WeeklyPlanRow = {
   id: string;
+  week_start: string;
   week_label: string;
   focus: string;
   focus_bullets: unknown;
@@ -20,9 +21,14 @@ type WeeklyPlanRow = {
   updated_at: string;
 };
 
+function isDateOnly(value: string | null) {
+  return Boolean(value && /^\d{4}-\d{2}-\d{2}$/.test(value));
+}
+
 function toClientPlan(row: WeeklyPlanRow) {
   return {
     id: row.id,
+    weekStart: row.week_start,
     weekLabel: row.week_label,
     focus: row.focus,
     focusBullets: row.focus_bullets,
@@ -38,14 +44,34 @@ function toClientPlan(row: WeeklyPlanRow) {
   };
 }
 
-export async function GET() {
+export async function GET(request: Request) {
   await requireSession();
   const supabase = getSupabaseAdmin();
+  const { searchParams } = new URL(request.url);
+  const history = searchParams.get("history") === "1";
+  const weekStart = searchParams.get("weekStart");
+  const before = searchParams.get("before");
+
+  if (history) {
+    let query = supabase
+      .from("weekly_plans")
+      .select("*")
+      .order("week_start", { ascending: false })
+      .order("updated_at", { ascending: false });
+
+    if (isDateOnly(before)) query = query.lt("week_start", before as string);
+
+    const { data, error } = await query.returns<WeeklyPlanRow[]>();
+    if (error) return Response.json({ error: error.message }, { status: 500 });
+    return Response.json((data ?? []).map(toClientPlan));
+  }
+
+  if (!isDateOnly(weekStart)) return Response.json({ error: "A valid weekStart query parameter is required." }, { status: 400 });
+
   const { data, error } = await supabase
     .from("weekly_plans")
     .select("*")
-    .order("updated_at", { ascending: false })
-    .limit(1)
+    .eq("week_start", weekStart as string)
     .maybeSingle<WeeklyPlanRow>();
 
   if (error) return Response.json({ error: error.message }, { status: 500 });
@@ -60,6 +86,7 @@ export async function POST(request: Request) {
   const plan = parsed.data;
   const supabase = getSupabaseAdmin();
   const payload = {
+    week_start: plan.weekStart,
     week_label: plan.weekLabel,
     focus: plan.focus,
     focus_bullets: plan.focusBullets,
@@ -75,7 +102,7 @@ export async function POST(request: Request) {
 
   const query = plan.id
     ? supabase.from("weekly_plans").update(payload).eq("id", plan.id).select("*").single<WeeklyPlanRow>()
-    : supabase.from("weekly_plans").insert(payload).select("*").single<WeeklyPlanRow>();
+    : supabase.from("weekly_plans").upsert(payload, { onConflict: "week_start" }).select("*").single<WeeklyPlanRow>();
 
   const { data, error } = await query;
   if (error) return Response.json({ error: error.message }, { status: 500 });
