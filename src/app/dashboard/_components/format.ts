@@ -1,4 +1,5 @@
 export function statusLabel(status: string) {
+  if (status === "todo") return "planned";
   return status.replaceAll("_", " ");
 }
 

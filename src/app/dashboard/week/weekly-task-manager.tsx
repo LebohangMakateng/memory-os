@@ -29,6 +29,7 @@ function ChevronUpIcon() {
   return <svg aria-hidden="true" className="size-4" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24"><path d="m18 15-6-6-6 6" /></svg>;
 }
 
+
 async function parseJson(response: Response) {
   const body = (await response.json().catch(() => ({}))) as { error?: unknown };
   if (!response.ok) throw new Error(typeof body.error === "string" ? body.error : "Request failed.");
@@ -78,7 +79,7 @@ function TaskFields({ milestones, priorities, task }: { milestones: Milestone[];
       <label className={labelClass}>Expected outcome<textarea className={textAreaClass} defaultValue={task?.expectedOutcome} name="expectedOutcome" required /></label>
     </div>
     <div className="grid gap-3 sm:grid-cols-3">
-      <label className={labelClass}>Status<select className={inputClass} defaultValue={task?.status ?? "todo"} name="status"><option value="todo">Todo</option><option value="in_progress">In progress</option><option value="blocked">Blocked</option><option value="done">Done</option></select></label>
+      <label className={labelClass}>Status<select className={inputClass} defaultValue={task?.status ?? "todo"} name="status"><option value="todo">Planned</option><option value="in_progress">In progress</option><option value="blocked">Blocked</option><option value="done">Done</option></select></label>
       <label className={labelClass}>Estimate<input className={inputClass} defaultValue={task?.estimateMinutes ?? 45} min={15} max={480} name="estimateMinutes" step={15} type="number" required /></label>
       <label className={labelClass}>Due date<input className={inputClass} defaultValue={dateValue(task?.dueDate ?? null)} name="dueDate" type="date" /></label>
     </div>
@@ -94,7 +95,7 @@ function TaskFields({ milestones, priorities, task }: { milestones: Milestone[];
 export function WeeklyTaskManager({ milestones, priorities, tasks }: { milestones: Milestone[]; priorities: Priority[]; tasks: Task[] }) {
   const router = useRouter();
   const [addingTask, setAddingTask] = useState(false);
-  const [todosOpen, setTodosOpen] = useState(false);
+  const [tasksOpen, setTasksOpen] = useState(false);
   const [editingId, setEditingId] = useState("");
   const [pendingId, setPendingId] = useState("");
   const [error, setError] = useState("");
@@ -167,20 +168,22 @@ export function WeeklyTaskManager({ milestones, priorities, tasks }: { milestone
   }
 
   return <section className="mt-8 grid gap-6">
-    {addingTask ? <form className="grid gap-4 rounded-2xl border border-[#dce4dd] bg-white p-7" onSubmit={createTask}>
-      <div className="flex flex-wrap items-start justify-between gap-3"><div><p className="text-[10px] font-bold tracking-[.14em] text-[#64726b]">TASKS</p><h2 className="mt-2 font-serif text-2xl">Add weekly task</h2></div><button aria-label="Close add weekly task form" className="grid size-9 place-items-center rounded-lg border border-[#cad5cb] text-[#163c30]" onClick={() => setAddingTask(false)} title="Close add weekly task form" type="button"><XIcon /></button></div>
-      <TaskFields milestones={milestones} priorities={priorities} />
-      <button className={primaryButton} disabled={pending || !milestones.length} type="submit">{pending ? "Saving..." : "Create task"}</button>
-      {!milestones.length ? <p className="text-sm text-[#64726b]">Create a project milestone before adding tasks.</p> : null}
-    </form> : <button className="flex items-center justify-between rounded-2xl border border-[#dce4dd] bg-white p-7 text-left" onClick={() => setAddingTask(true)} type="button">
-      <span><span className="block text-[10px] font-bold tracking-[.14em] text-[#64726b]">TASKS</span><span className="mt-2 block font-serif text-2xl text-[#16231e]">Add weekly task</span></span>
-      <span className="grid size-10 place-items-center rounded-lg bg-[#163c30] text-white"><PlusIcon /></span>
-    </button>}
-    {todosOpen ? <article className="rounded-2xl border border-[#dce4dd] bg-white p-6">
-      <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
-        <div><p className="text-[10px] font-bold tracking-[.14em] text-[#64726b]">TASKS</p><h2 className="mt-2 font-serif text-2xl text-[#16231e]">Todos</h2></div>
-        <button aria-label="Hide todos" className="grid size-9 place-items-center rounded-lg border border-[#cad5cb] text-[#163c30]" onClick={() => setTodosOpen(false)} title="Hide todos" type="button"><ChevronUpIcon /></button>
+    {tasksOpen ? <article className="rounded-2xl border border-[#dce4dd] bg-white p-6">
+      <div className="mb-5 flex flex-wrap items-start justify-between gap-3">
+        <div><p className="text-[10px] font-bold tracking-[.14em] text-[#64726b]">TASKS</p><h2 className="mt-2 font-serif text-2xl text-[#16231e]">Weekly tasks</h2></div>
+        <div className="flex gap-2">
+          {!addingTask ? <button aria-label="Add weekly task" className="grid size-10 place-items-center rounded-lg bg-[#163c30] text-white" onClick={() => setAddingTask(true)} title="Add weekly task" type="button"><PlusIcon /></button> : null}
+          <button aria-label="Hide weekly tasks" className="grid size-10 place-items-center rounded-lg border border-[#cad5cb] text-[#163c30]" onClick={() => setTasksOpen(false)} title="Hide weekly tasks" type="button"><ChevronUpIcon /></button>
+        </div>
       </div>
+
+      {addingTask ? <form className="mb-5 grid gap-4 rounded-xl bg-[#f5f7f2] p-4" onSubmit={createTask}>
+        <div className="flex flex-wrap items-start justify-between gap-3"><h3 className="font-serif text-xl text-[#16231e]">Add weekly task</h3><button aria-label="Close add weekly task form" className="grid size-9 place-items-center rounded-lg border border-[#cad5cb] bg-white text-[#163c30]" onClick={() => setAddingTask(false)} title="Close add weekly task form" type="button"><XIcon /></button></div>
+        <TaskFields milestones={milestones} priorities={priorities} />
+        <button className={primaryButton} disabled={pending || !milestones.length} type="submit">{pending ? "Saving..." : "Create task"}</button>
+        {!milestones.length ? <p className="text-sm text-[#64726b]">Create a project milestone before adding tasks.</p> : null}
+      </form> : null}
+
       <div className="grid gap-3">
         {tasks.length ? tasks.map((task) => {
           const milestone = milestoneById.get(task.milestoneId);
@@ -198,10 +201,10 @@ export function WeeklyTaskManager({ milestones, priorities, tasks }: { milestone
               <p className="mt-3 text-sm leading-6 text-[#64726b]">{task.nextAction}</p>
             </>}
           </article>;
-        }) : <div className="rounded-xl bg-[#f5f7f2] p-4 text-sm text-[#64726b]">No tasks yet.</div>}
+        }) : <div className="rounded-xl bg-[#f5f7f2] p-4 text-sm text-[#64726b]">No weekly tasks yet.</div>}
       </div>
-    </article> : <button className="flex items-center justify-between gap-4 rounded-2xl border border-[#dce4dd] bg-white p-7 text-left" onClick={() => setTodosOpen(true)} type="button">
-      <span><span className="block text-[10px] font-bold tracking-[.14em] text-[#64726b]">TASKS</span><span className="mt-2 block font-serif text-2xl text-[#16231e]">Todos</span></span>
+    </article> : <button className="flex items-center justify-between gap-4 rounded-2xl border border-[#dce4dd] bg-white p-7 text-left" onClick={() => setTasksOpen(true)} type="button">
+      <span><span className="block text-[10px] font-bold tracking-[.14em] text-[#64726b]">TASKS</span><span className="mt-2 block font-serif text-2xl text-[#16231e]">Weekly tasks</span></span>
       <span className="grid size-10 shrink-0 place-items-center rounded-lg bg-[#163c30] text-white"><ChevronDownIcon /></span>
     </button>}
     {error ? <p className="text-sm font-bold text-red-700">{error}</p> : null}

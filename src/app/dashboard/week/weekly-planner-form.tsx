@@ -127,10 +127,10 @@ function mergeAiDraft(current: WeeklyPlanPayload, draft: AiDraft, weekStart: str
     ...current,
     weekStart,
     weekLabel: formatWeekLabel(weekStart),
-    focus: isBlank(current.focus) ? draft.focus : current.focus,
-    focusBullets: blankStringArray(current.focusBullets) ? draft.focusBullets : current.focusBullets,
-    mainBuild: isBlank(current.mainBuild) ? draft.mainBuild : current.mainBuild,
-    definitionOfDone: blankStringArray(current.definitionOfDone) ? draft.definitionOfDone : current.definitionOfDone,
+    focus: draft.focus,
+    focusBullets: draft.focusBullets,
+    mainBuild: draft.mainBuild,
+    definitionOfDone: draft.definitionOfDone,
     weeklyTargets: blankTargets(current.weeklyTargets) ? draft.weeklyTargets : current.weeklyTargets,
     dailyLog: current.dailyLog.map((day) => mergeDay(day, draftDays.get(day.day))),
     outreachTracker: blankOutreach(current.outreachTracker) ? draft.outreachTracker : current.outreachTracker,
@@ -348,7 +348,7 @@ export function WeeklyPlannerForm({ starterTargets, milestones, priorities, task
           await parseJson(await fetch("/api/execution/tasks", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(task) }));
         }
         setAiDraftText("");
-        setSaveMessage(draft.tasksToCreate?.length ? "Applied AI draft and created proposed tasks. Review and save the weekly plan." : "Applied AI draft. Review and save the weekly plan.");
+        setSaveMessage(draft.tasksToCreate?.length ? "Applied AI draft and created weekly tasks. Review and save the weekly plan." : "Applied AI draft. Review and save the weekly plan.");
         router.refresh();
       } catch (caught) {
         setAiError(caught instanceof Error ? caught.message : "Could not apply AI draft.");
