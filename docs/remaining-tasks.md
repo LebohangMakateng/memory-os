@@ -1,3 +1,4 @@
+
 # Remaining Tasks
 
 The core app is now wired as a usable Supabase-backed Execution OS: migrations use Supabase CLI, runtime data access uses the Supabase service-role client, and the dashboard reads/writes live data.
