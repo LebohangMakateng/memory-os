@@ -146,14 +146,14 @@ function mergeAiDraft(current: WeeklyPlanPayload, draft: AiDraft, weekStart: str
 function Field({ label, value, onChange, placeholder, readOnly = false }: { label: string; value: string; onChange?: (value: string) => void; placeholder?: string; readOnly?: boolean }) {
   return <label className="grid gap-2">
     <span className="text-[10px] font-bold uppercase tracking-[.14em] text-[#64726b]">{label}</span>
-    <input className="h-11 rounded-lg border border-[#dce4dd] bg-white px-3 text-sm outline-none focus:border-[#163c30] focus:ring-2 focus:ring-[#d8ef61] read-only:bg-[#f5f7f2]" onChange={(event) => onChange?.(event.target.value)} placeholder={placeholder} readOnly={readOnly} value={value} />
+    <input className="h-11 rounded-lg border border-[#dce4dd]/70 bg-white/70 backdrop-blur-xl px-3 text-sm outline-none focus:border-[#163c30] focus:ring-2 focus:ring-[#d8ef61] read-only:bg-white/35 backdrop-blur-xl" onChange={(event) => onChange?.(event.target.value)} placeholder={placeholder} readOnly={readOnly} value={value} />
   </label>;
 }
 
 function MultiField({ label, value, onChange, rows = 3, placeholder }: { label: string; value: string; onChange: (value: string) => void; rows?: number; placeholder?: string }) {
   return <label className="grid gap-2">
     <span className="text-[10px] font-bold uppercase tracking-[.14em] text-[#64726b]">{label}</span>
-    <textarea className="min-h-24 w-full rounded-lg border border-[#dce4dd] bg-white px-3 py-2 text-sm leading-6 outline-none focus:border-[#163c30] focus:ring-2 focus:ring-[#d8ef61]" onChange={(event) => onChange(event.target.value)} placeholder={placeholder} rows={rows} value={value} />
+    <textarea className="min-h-24 w-full rounded-lg border border-[#dce4dd]/70 bg-white/70 backdrop-blur-xl px-3 py-2 text-sm leading-6 outline-none focus:border-[#163c30] focus:ring-2 focus:ring-[#d8ef61]" onChange={(event) => onChange(event.target.value)} placeholder={placeholder} rows={rows} value={value} />
   </label>;
 }
 function ChevronDownIcon() {
@@ -369,30 +369,30 @@ export function WeeklyPlannerForm({ starterTargets, milestones, priorities, task
     });
   }
 
-  const aiPanel = <aside className="grid h-fit gap-4 rounded-2xl border border-[#dce4dd] bg-white p-5 xl:sticky xl:top-8">
+  const aiPanel = <aside className="grid h-fit gap-4 rounded-2xl border border-[#dce4dd]/70 bg-white/70 backdrop-blur-xl p-5 xl:sticky xl:top-8">
     <div className="flex items-start justify-between gap-4">
       <div>
         <p className="text-[10px] font-bold uppercase tracking-[.14em] text-[#64726b]">AI weekly planner</p>
         <h2 className="mt-2 font-serif text-2xl">Describe this week</h2>
       </div>
-      <button aria-label="Hide AI planner" className="grid size-9 place-items-center rounded-lg border border-[#cad5cb] text-[#163c30]" onClick={() => setAiOpen(false)} title="Hide AI planner" type="button"><XIcon /></button>
+      <button aria-label="Hide AI planner" className="grid size-9 place-items-center rounded-lg border border-[#cad5cb]/70 text-[#163c30]" onClick={() => setAiOpen(false)} title="Hide AI planner" type="button"><XIcon /></button>
     </div>
 
-    <div className="grid max-h-[34rem] gap-3 overflow-auto rounded-xl bg-[#f5f7f2] p-4">
-      {aiMessages.length ? aiMessages.map((message, index) => <div className={message.role === "user" ? "ml-auto max-w-[90%] rounded-lg bg-[#163c30] px-3 py-2 text-sm text-white" : "mr-auto max-w-[90%] whitespace-pre-wrap rounded-lg bg-white px-3 py-2 text-sm text-[#293831]"} key={`${message.role}-${index}`}>{message.content}</div>) : <p className="text-sm text-[#64726b]">Tell the assistant what you want to work on, your constraints, deadlines, energy, and what should be shipped or shared.</p>}
+    <div className="grid max-h-[34rem] gap-3 overflow-auto rounded-xl bg-white/35 backdrop-blur-xl p-4">
+      {aiMessages.length ? aiMessages.map((message, index) => <div className={message.role === "user" ? "ml-auto max-w-[90%] rounded-lg bg-[#163c30]/85 backdrop-blur-xl px-3 py-2 text-sm text-white" : "mr-auto max-w-[90%] whitespace-pre-wrap rounded-lg bg-white/70 backdrop-blur-xl px-3 py-2 text-sm text-[#293831]"} key={`${message.role}-${index}`}>{message.content}</div>) : <p className="text-sm text-[#64726b]">Tell the assistant what you want to work on, your constraints, deadlines, energy, and what should be shipped or shared.</p>}
     </div>
 
     {!aiDraftText ? <div className="grid gap-3">
-      <textarea className="min-h-36 rounded-lg border border-[#dce4dd] px-3 py-2 text-sm leading-6 outline-none focus:border-[#163c30] focus:ring-2 focus:ring-[#d8ef61]" onChange={(event) => setAiInput(event.target.value)} placeholder="Example: This week I want to focus on shipping the sneaker inventory MVP, publish two posts, and do outreach without overloading myself..." value={aiInput} />
-      <button className="rounded-lg bg-[#163c30] px-4 py-3 text-sm font-bold text-white disabled:opacity-60" disabled={aiPending || !aiInput.trim()} onClick={sendAiMessage} type="button">{aiPending ? "Thinking..." : "Send"}</button>
+      <textarea className="min-h-36 rounded-lg border border-[#dce4dd]/70 px-3 py-2 text-sm leading-6 outline-none focus:border-[#163c30] focus:ring-2 focus:ring-[#d8ef61]" onChange={(event) => setAiInput(event.target.value)} placeholder="Example: This week I want to focus on shipping the sneaker inventory MVP, publish two posts, and do outreach without overloading myself..." value={aiInput} />
+      <button className="rounded-lg bg-[#163c30]/85 backdrop-blur-xl px-4 py-3 text-sm font-bold text-white disabled:opacity-60" disabled={aiPending || !aiInput.trim()} onClick={sendAiMessage} type="button">{aiPending ? "Thinking..." : "Send"}</button>
     </div> : <div className="grid gap-3">
       <label className="grid gap-2">
         <span className="text-[10px] font-bold uppercase tracking-[.14em] text-[#64726b]">Editable draft JSON</span>
-        <textarea className="min-h-96 rounded-lg border border-[#dce4dd] bg-[#f5f7f2] px-3 py-2 font-mono text-xs leading-5 outline-none focus:border-[#163c30] focus:ring-2 focus:ring-[#d8ef61]" onChange={(event) => setAiDraftText(event.target.value)} value={aiDraftText} />
+        <textarea className="min-h-96 rounded-lg border border-[#dce4dd]/70 bg-white/35 backdrop-blur-xl px-3 py-2 font-mono text-xs leading-5 outline-none focus:border-[#163c30] focus:ring-2 focus:ring-[#d8ef61]" onChange={(event) => setAiDraftText(event.target.value)} value={aiDraftText} />
       </label>
       <div className="flex flex-wrap gap-2">
-        <button className="rounded-lg bg-[#163c30] px-4 py-3 text-sm font-bold text-white disabled:opacity-60" disabled={aiPending} onClick={approveAiDraft} type="button">{aiPending ? "Applying..." : "Approve and apply"}</button>
-        <button aria-label="Back to chat" className="grid size-11 place-items-center rounded-lg border border-[#cad5cb] text-[#163c30]" onClick={() => setAiDraftText("")} title="Back to chat" type="button"><ArrowLeftIcon /></button>
+        <button className="rounded-lg bg-[#163c30]/85 backdrop-blur-xl px-4 py-3 text-sm font-bold text-white disabled:opacity-60" disabled={aiPending} onClick={approveAiDraft} type="button">{aiPending ? "Applying..." : "Approve and apply"}</button>
+        <button aria-label="Back to chat" className="grid size-11 place-items-center rounded-lg border border-[#cad5cb]/70 text-[#163c30]" onClick={() => setAiDraftText("")} title="Back to chat" type="button"><ArrowLeftIcon /></button>
       </div>
     </div>}
     {aiError ? <p className="text-sm font-bold text-red-700">{aiError}</p> : null}
@@ -401,15 +401,15 @@ export function WeeklyPlannerForm({ starterTargets, milestones, priorities, task
   return <section className={aiOpen ? "grid gap-6 xl:grid-cols-[minmax(530px,1fr)_minmax(530px,1fr)]" : "grid gap-6"}>
     {aiOpen ? aiPanel : null}
     <div className="grid gap-6">
-        {dashboardOpen ? <article className="rounded-2xl border border-[#dce4dd] bg-white p-6">
+        {dashboardOpen ? <article className="rounded-2xl border border-[#dce4dd]/70 bg-white/70 backdrop-blur-xl p-6">
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div>
               <p className="text-[10px] font-bold uppercase tracking-[.14em] text-[#64726b]">Weekly dashboard</p>
               <h2 className="mt-2 font-serif text-2xl">Execution OS</h2>
             </div>
             <div className="flex flex-wrap gap-2">
-              <button className="rounded-lg bg-[#163c30] px-4 py-3 text-sm font-bold text-white disabled:opacity-60" disabled={pending} onClick={savePlan} type="button">{pending ? "Saving..." : "Save weekly plan"}</button>
-              <button aria-label="Hide weekly dashboard" className="grid size-11 place-items-center rounded-lg border border-[#cad5cb] text-[#163c30]" onClick={() => setDashboardOpen(false)} title="Hide weekly dashboard" type="button"><ChevronUpIcon /></button>
+              <button className="rounded-lg bg-[#163c30]/85 backdrop-blur-xl px-4 py-3 text-sm font-bold text-white disabled:opacity-60" disabled={pending} onClick={savePlan} type="button">{pending ? "Saving..." : "Save weekly plan"}</button>
+              <button aria-label="Hide weekly dashboard" className="grid size-11 place-items-center rounded-lg border border-[#cad5cb]/70 text-[#163c30]" onClick={() => setDashboardOpen(false)} title="Hide weekly dashboard" type="button"><ChevronUpIcon /></button>
             </div>
           </div>
           {saveMessage ? <p className="mt-3 text-sm font-bold text-[#3d6729]">{saveMessage}</p> : null}
@@ -422,38 +422,38 @@ export function WeeklyPlannerForm({ starterTargets, milestones, priorities, task
             <Field label="Main build" onChange={(mainBuild) => updatePlan({ mainBuild })} value={plan.mainBuild} />
             <MultiField label="Definition of done by Friday" onChange={(value) => updatePlan({ definitionOfDone: textToLines(value) })} rows={5} value={linesToText(plan.definitionOfDone)} />
           </div>
-        </article> : <button className="flex items-center justify-between gap-4 rounded-2xl border border-[#dce4dd] bg-white p-6 text-left" onClick={() => setDashboardOpen(true)} type="button">
+        </article> : <button className="flex items-center justify-between gap-4 rounded-2xl border border-[#dce4dd]/70 bg-white/70 backdrop-blur-xl p-6 text-left" onClick={() => setDashboardOpen(true)} type="button">
           <span><span className="block text-[10px] font-bold uppercase tracking-[.14em] text-[#64726b]">Weekly dashboard</span><span className="mt-2 block font-serif text-2xl text-[#16231e]">Execution OS</span></span>
-          <span className="grid size-10 shrink-0 place-items-center rounded-lg bg-[#163c30] text-white"><ChevronDownIcon /></span>
+          <span className="grid size-10 shrink-0 place-items-center rounded-lg bg-[#163c30]/85 backdrop-blur-xl text-white"><ChevronDownIcon /></span>
         </button>}
 
         <WeeklyTaskManager milestones={milestones} priorities={priorities} tasks={tasks} />
 
-        {weeklyTargetsOpen ? <article className="rounded-2xl border border-[#dce4dd] bg-white p-6">
+        {weeklyTargetsOpen ? <article className="rounded-2xl border border-[#dce4dd]/70 bg-white/70 backdrop-blur-xl p-6">
           <div className="mb-4 flex items-center justify-between gap-3">
             <h2 className="font-serif text-2xl">Weekly targets</h2>
-            <div className="flex gap-2"><button className="rounded-lg border border-[#cad5cb] px-3 py-2 text-xs font-bold text-[#163c30]" onClick={() => updatePlan({ weeklyTargets: [...plan.weeklyTargets, { id: nextId(), label: "", done: false }] })} type="button">Add target</button><button aria-label="Hide weekly targets" className="grid size-9 place-items-center rounded-lg border border-[#cad5cb] text-[#163c30]" onClick={() => setWeeklyTargetsOpen(false)} title="Hide weekly targets" type="button"><ChevronUpIcon /></button></div>
+            <div className="flex gap-2"><button className="rounded-lg border border-[#cad5cb]/70 px-3 py-2 text-xs font-bold text-[#163c30]" onClick={() => updatePlan({ weeklyTargets: [...plan.weeklyTargets, { id: nextId(), label: "", done: false }] })} type="button">Add target</button><button aria-label="Hide weekly targets" className="grid size-9 place-items-center rounded-lg border border-[#cad5cb]/70 text-[#163c30]" onClick={() => setWeeklyTargetsOpen(false)} title="Hide weekly targets" type="button"><ChevronUpIcon /></button></div>
           </div>
           <div className="grid gap-3">
-            {plan.weeklyTargets.map((target) => <div className="grid gap-3 rounded-lg bg-[#f5f7f2] p-3 md:grid-cols-[auto_1fr]" key={target.id}>
+            {plan.weeklyTargets.map((target) => <div className="grid gap-3 rounded-lg bg-white/35 backdrop-blur-xl p-3 md:grid-cols-[auto_1fr]" key={target.id}>
               <input checked={target.done} className="mt-3 size-4 accent-[#163c30]" onChange={(event) => updateTarget(target.id, { done: event.target.checked })} type="checkbox" />
-              <input className="h-10 rounded-lg border border-[#dce4dd] bg-white px-3 text-sm outline-none focus:border-[#163c30] focus:ring-2 focus:ring-[#d8ef61]" onChange={(event) => updateTarget(target.id, { label: event.target.value })} value={target.label} />
+              <input className="h-10 rounded-lg border border-[#dce4dd]/70 bg-white/70 backdrop-blur-xl px-3 text-sm outline-none focus:border-[#163c30] focus:ring-2 focus:ring-[#d8ef61]" onChange={(event) => updateTarget(target.id, { label: event.target.value })} value={target.label} />
             </div>)}
           </div>
-        </article> : <button className="flex items-center justify-between rounded-2xl border border-[#dce4dd] bg-white p-6 text-left" onClick={() => setWeeklyTargetsOpen(true)} type="button">
+        </article> : <button className="flex items-center justify-between rounded-2xl border border-[#dce4dd]/70 bg-white/70 backdrop-blur-xl p-6 text-left" onClick={() => setWeeklyTargetsOpen(true)} type="button">
           <span className="font-serif text-2xl text-[#16231e]">Weekly targets</span>
-          <span className="grid size-10 place-items-center rounded-lg bg-[#163c30] text-white"><ChevronDownIcon /></span>
+          <span className="grid size-10 place-items-center rounded-lg bg-[#163c30]/85 backdrop-blur-xl text-white"><ChevronDownIcon /></span>
         </button>}
 
-        {dailyLogOpen ? <article className="rounded-2xl border border-[#dce4dd] bg-white p-6">
-          <div className="flex flex-wrap items-start justify-between gap-3"><div><p className="text-[10px] font-bold tracking-[.14em] text-[#64726b]">EXECUTION</p><h2 className="mt-2 font-serif text-2xl">Daily execution log</h2></div><button aria-label="Hide daily execution log" className="grid size-9 place-items-center rounded-lg border border-[#cad5cb] text-[#163c30]" onClick={() => setDailyLogOpen(false)} title="Hide daily execution log" type="button"><ChevronUpIcon /></button></div>
+        {dailyLogOpen ? <article className="rounded-2xl border border-[#dce4dd]/70 bg-white/70 backdrop-blur-xl p-6">
+          <div className="flex flex-wrap items-start justify-between gap-3"><div><p className="text-[10px] font-bold tracking-[.14em] text-[#64726b]">EXECUTION</p><h2 className="mt-2 font-serif text-2xl">Daily execution log</h2></div><button aria-label="Hide daily execution log" className="grid size-9 place-items-center rounded-lg border border-[#cad5cb]/70 text-[#163c30]" onClick={() => setDailyLogOpen(false)} title="Hide daily execution log" type="button"><ChevronUpIcon /></button></div>
           <div className="mt-5 grid gap-4">
             {plan.dailyLog.map((day) => {
               const dayOpen = openDays.has(day.day);
-              return <section className="rounded-xl border border-[#dce4dd] bg-[#f5f7f2] p-4" key={day.day}>
+              return <section className="rounded-xl border border-[#dce4dd]/70 bg-white/35 backdrop-blur-xl p-4" key={day.day}>
                 <button className="flex w-full items-center justify-between text-left" onClick={() => toggleDay(day.day)} type="button">
                   <span className="font-bold">{dayLabel(day.day)}</span>
-                  <span className="grid size-8 place-items-center rounded-lg border border-[#cad5cb] bg-white text-[#163c30]">{dayOpen ? <ChevronUpIcon /> : <ChevronDownIcon />}</span>
+                  <span className="grid size-8 place-items-center rounded-lg border border-[#cad5cb]/70 bg-white/70 backdrop-blur-xl text-[#163c30]">{dayOpen ? <ChevronUpIcon /> : <ChevronDownIcon />}</span>
                 </button>
                 {dayOpen ? day.day === "Saturday" ? <div className="mt-3 grid gap-3 md:grid-cols-3">
                   <Field label="Messages sent" onChange={(messages) => updateDay(day.day, { messages })} value={day.messages} />
@@ -467,32 +467,32 @@ export function WeeklyPlannerForm({ starterTargets, milestones, priorities, task
               </section>;
             })}
           </div>
-        </article> : <button className="flex items-center justify-between rounded-2xl border border-[#dce4dd] bg-white p-6 text-left" onClick={() => setDailyLogOpen(true)} type="button">
+        </article> : <button className="flex items-center justify-between rounded-2xl border border-[#dce4dd]/70 bg-white/70 backdrop-blur-xl p-6 text-left" onClick={() => setDailyLogOpen(true)} type="button">
           <span><span className="block text-[10px] font-bold tracking-[.14em] text-[#64726b]">EXECUTION</span><span className="mt-2 block font-serif text-2xl text-[#16231e]">Daily execution log</span></span>
-          <span className="grid size-10 place-items-center rounded-lg bg-[#163c30] text-white"><ChevronDownIcon /></span>
+          <span className="grid size-10 place-items-center rounded-lg bg-[#163c30]/85 backdrop-blur-xl text-white"><ChevronDownIcon /></span>
         </button>}
 
-        {outreachOpen ? <article className="rounded-2xl border border-[#dce4dd] bg-white p-6">
+        {outreachOpen ? <article className="rounded-2xl border border-[#dce4dd]/70 bg-white/70 backdrop-blur-xl p-6">
           <div className="mb-4 flex items-center justify-between gap-3">
             <h2 className="font-serif text-2xl">Outreach tracker</h2>
-            <div className="flex gap-2"><button className="rounded-lg border border-[#cad5cb] px-3 py-2 text-xs font-bold text-[#163c30]" onClick={() => updatePlan({ outreachTracker: [...plan.outreachTracker, { id: plan.outreachTracker.length + 1, name: "", platform: "", messageSent: "", response: "", followUp: "" }] })} type="button">Add row</button><button aria-label="Hide outreach tracker" className="grid size-9 place-items-center rounded-lg border border-[#cad5cb] text-[#163c30]" onClick={() => setOutreachOpen(false)} title="Hide outreach tracker" type="button"><ChevronUpIcon /></button></div>
+            <div className="flex gap-2"><button className="rounded-lg border border-[#cad5cb]/70 px-3 py-2 text-xs font-bold text-[#163c30]" onClick={() => updatePlan({ outreachTracker: [...plan.outreachTracker, { id: plan.outreachTracker.length + 1, name: "", platform: "", messageSent: "", response: "", followUp: "" }] })} type="button">Add row</button><button aria-label="Hide outreach tracker" className="grid size-9 place-items-center rounded-lg border border-[#cad5cb]/70 text-[#163c30]" onClick={() => setOutreachOpen(false)} title="Hide outreach tracker" type="button"><ChevronUpIcon /></button></div>
           </div>
           <div className="grid gap-3">
-            {plan.outreachTracker.map((row) => <div className="grid gap-2 rounded-lg bg-[#f5f7f2] p-3 md:grid-cols-5" key={row.id}>
-              <input aria-label="Name" className="h-10 rounded-lg border border-[#dce4dd] px-3 text-sm" onChange={(event) => updateOutreach(row.id, { name: event.target.value })} placeholder="Name" value={row.name} />
-              <input aria-label="Platform" className="h-10 rounded-lg border border-[#dce4dd] px-3 text-sm" onChange={(event) => updateOutreach(row.id, { platform: event.target.value })} placeholder="Platform" value={row.platform} />
-              <input aria-label="Message sent" className="h-10 rounded-lg border border-[#dce4dd] px-3 text-sm" onChange={(event) => updateOutreach(row.id, { messageSent: event.target.value })} placeholder="Message sent" value={row.messageSent} />
-              <input aria-label="Response" className="h-10 rounded-lg border border-[#dce4dd] px-3 text-sm" onChange={(event) => updateOutreach(row.id, { response: event.target.value })} placeholder="Response" value={row.response} />
-              <input aria-label="Follow-up" className="h-10 rounded-lg border border-[#dce4dd] px-3 text-sm" onChange={(event) => updateOutreach(row.id, { followUp: event.target.value })} placeholder="Follow-up" value={row.followUp} />
+            {plan.outreachTracker.map((row) => <div className="grid gap-2 rounded-lg bg-white/35 backdrop-blur-xl p-3 md:grid-cols-5" key={row.id}>
+              <input aria-label="Name" className="h-10 rounded-lg border border-[#dce4dd]/70 px-3 text-sm" onChange={(event) => updateOutreach(row.id, { name: event.target.value })} placeholder="Name" value={row.name} />
+              <input aria-label="Platform" className="h-10 rounded-lg border border-[#dce4dd]/70 px-3 text-sm" onChange={(event) => updateOutreach(row.id, { platform: event.target.value })} placeholder="Platform" value={row.platform} />
+              <input aria-label="Message sent" className="h-10 rounded-lg border border-[#dce4dd]/70 px-3 text-sm" onChange={(event) => updateOutreach(row.id, { messageSent: event.target.value })} placeholder="Message sent" value={row.messageSent} />
+              <input aria-label="Response" className="h-10 rounded-lg border border-[#dce4dd]/70 px-3 text-sm" onChange={(event) => updateOutreach(row.id, { response: event.target.value })} placeholder="Response" value={row.response} />
+              <input aria-label="Follow-up" className="h-10 rounded-lg border border-[#dce4dd]/70 px-3 text-sm" onChange={(event) => updateOutreach(row.id, { followUp: event.target.value })} placeholder="Follow-up" value={row.followUp} />
             </div>)}
           </div>
-        </article> : <button className="flex items-center justify-between rounded-2xl border border-[#dce4dd] bg-white p-6 text-left" onClick={() => setOutreachOpen(true)} type="button">
+        </article> : <button className="flex items-center justify-between rounded-2xl border border-[#dce4dd]/70 bg-white/70 backdrop-blur-xl p-6 text-left" onClick={() => setOutreachOpen(true)} type="button">
           <span className="font-serif text-2xl text-[#16231e]">Outreach tracker</span>
-          <span className="grid size-10 place-items-center rounded-lg bg-[#163c30] text-white"><ChevronDownIcon /></span>
+          <span className="grid size-10 place-items-center rounded-lg bg-[#163c30]/85 backdrop-blur-xl text-white"><ChevronDownIcon /></span>
         </button>}
 
-        {rulesOpen ? <article className="rounded-2xl border border-[#dce4dd] bg-white p-6">
-          <div className="flex flex-wrap items-start justify-between gap-3"><h2 className="font-serif text-2xl">Rules and fear check</h2><button aria-label="Hide rules and fear check" className="grid size-9 place-items-center rounded-lg border border-[#cad5cb] text-[#163c30]" onClick={() => setRulesOpen(false)} title="Hide rules and fear check" type="button"><ChevronUpIcon /></button></div>
+        {rulesOpen ? <article className="rounded-2xl border border-[#dce4dd]/70 bg-white/70 backdrop-blur-xl p-6">
+          <div className="flex flex-wrap items-start justify-between gap-3"><h2 className="font-serif text-2xl">Rules and fear check</h2><button aria-label="Hide rules and fear check" className="grid size-9 place-items-center rounded-lg border border-[#cad5cb]/70 text-[#163c30]" onClick={() => setRulesOpen(false)} title="Hide rules and fear check" type="button"><ChevronUpIcon /></button></div>
           <div className="mt-4 grid gap-4 lg:grid-cols-[.8fr_1.2fr]">
             <MultiField label="Rules" onChange={(value) => updatePlan({ rules: textToLines(value) })} rows={4} value={linesToText(plan.rules)} />
             <div className="grid gap-3">
@@ -500,9 +500,9 @@ export function WeeklyPlannerForm({ starterTargets, milestones, priorities, task
               <MultiField label="Smallest action I can take right now" onChange={(smallestAction) => updatePlan({ fearCheck: { ...plan.fearCheck, smallestAction } })} rows={2} value={plan.fearCheck.smallestAction} />
             </div>
           </div>
-        </article> : <button className="flex items-center justify-between rounded-2xl border border-[#dce4dd] bg-white p-6 text-left" onClick={() => setRulesOpen(true)} type="button">
+        </article> : <button className="flex items-center justify-between rounded-2xl border border-[#dce4dd]/70 bg-white/70 backdrop-blur-xl p-6 text-left" onClick={() => setRulesOpen(true)} type="button">
           <span className="font-serif text-2xl text-[#16231e]">Rules and fear check</span>
-          <span className="grid size-10 place-items-center rounded-lg bg-[#163c30] text-white"><ChevronDownIcon /></span>
+          <span className="grid size-10 place-items-center rounded-lg bg-[#163c30]/85 backdrop-blur-xl text-white"><ChevronDownIcon /></span>
         </button>}
       </div>
   </section>;

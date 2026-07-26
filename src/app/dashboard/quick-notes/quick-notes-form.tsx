@@ -50,31 +50,31 @@ export function QuickNotesForm({ initialNotes }: { initialNotes: QuickNote[] }) 
   }
 
   return <section className="grid gap-6 lg:grid-cols-[.9fr_1.1fr]">
-    <article className="rounded-2xl border border-[#dce4dd] bg-white p-6 md:p-7">
+    <article className="rounded-2xl border border-[#dce4dd]/70 bg-white/70 backdrop-blur-xl p-6 md:p-7">
       <h2 className="font-serif text-2xl text-[#16231e]">New note</h2>
       <form className="mt-5 grid gap-4" onSubmit={submit}>
         <label className="grid gap-1 text-xs font-bold text-[#32443a]">Title
-          <input className="rounded-lg border border-[#cad5cb] bg-white px-3 py-3 text-sm outline-none focus:border-[#163c30] focus:ring-2 focus:ring-[#d8ef61]" name="title" required />
+          <input className="rounded-lg border border-[#cad5cb]/70 bg-white/70 backdrop-blur-xl px-3 py-3 text-sm outline-none focus:border-[#163c30] focus:ring-2 focus:ring-[#d8ef61]" name="title" required />
         </label>
         <label className="grid gap-1 text-xs font-bold text-[#32443a]">Notes
-          <textarea className="min-h-56 rounded-lg border border-[#cad5cb] bg-white px-3 py-3 text-sm leading-6 outline-none focus:border-[#163c30] focus:ring-2 focus:ring-[#d8ef61]" name="notes" required />
+          <textarea className="min-h-56 rounded-lg border border-[#cad5cb]/70 bg-white/70 backdrop-blur-xl px-3 py-3 text-sm leading-6 outline-none focus:border-[#163c30] focus:ring-2 focus:ring-[#d8ef61]" name="notes" required />
         </label>
-        <button className="rounded-lg bg-[#163c30] px-4 py-3 text-sm font-bold text-white disabled:opacity-60" disabled={pending} type="submit">{pending ? "Saving..." : "Save"}</button>
+        <button className="rounded-lg bg-[#163c30]/85 backdrop-blur-xl px-4 py-3 text-sm font-bold text-white disabled:opacity-60" disabled={pending} type="submit">{pending ? "Saving..." : "Save"}</button>
         {saved ? <p className="text-sm font-bold text-[#163c30]">{saved}</p> : null}
         {error ? <p className="text-sm font-bold text-red-700">{error}</p> : null}
       </form>
     </article>
 
-    <article className="rounded-2xl border border-[#dce4dd] bg-white p-6 md:p-7">
+    <article className="rounded-2xl border border-[#dce4dd]/70 bg-white/70 backdrop-blur-xl p-6 md:p-7">
       <h2 className="font-serif text-2xl text-[#16231e]">Recent captures</h2>
       <div className="mt-5 grid gap-3">
-        {notes.length ? notes.map((note) => <section className="rounded-xl bg-[#f5f7f2] p-4" key={note.id}>
+        {notes.length ? notes.map((note) => <section className="rounded-xl bg-white/35 backdrop-blur-xl p-4" key={note.id}>
           <div className="flex flex-wrap items-start justify-between gap-3">
             <h3 className="text-sm font-bold text-[#16231e]">{note.title}</h3>
             <p className="text-[10px] font-bold uppercase tracking-[.14em] text-[#64726b]">{formatCreatedAt(note.created_at)}</p>
           </div>
           <p className="mt-3 whitespace-pre-wrap text-sm leading-6 text-[#64726b]">{note.notes}</p>
-        </section>) : <p className="rounded-xl bg-[#f5f7f2] p-4 text-sm text-[#64726b]">No quick notes yet.</p>}
+        </section>) : <p className="rounded-xl bg-white/35 backdrop-blur-xl p-4 text-sm text-[#64726b]">No quick notes yet.</p>}
       </div>
     </article>
   </section>;

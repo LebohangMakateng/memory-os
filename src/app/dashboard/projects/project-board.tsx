@@ -8,10 +8,10 @@ type Initiative = { id: string; title: string };
 type Project = { id: string; initiativeId: string; title: string; purpose: string; status: string; shareStatus: string };
 type Milestone = { id: string; projectId: string; title: string; outcome: string };
 
-const inputClass = "rounded-lg border border-[#cad5cb] bg-white px-3 py-2 text-sm";
+const inputClass = "rounded-lg border border-[#cad5cb]/70 bg-white/70 backdrop-blur-xl px-3 py-2 text-sm";
 const labelClass = "grid gap-1 text-xs font-bold text-[#32443a]";
-const primaryButton = "rounded-lg bg-[#163c30] px-4 py-2 text-sm font-bold text-white disabled:opacity-60";
-const secondaryButton = "rounded-lg border border-[#cad5cb] px-3 py-2 text-xs font-bold text-[#163c30] disabled:opacity-60";
+const primaryButton = "rounded-lg bg-[#163c30]/85 backdrop-blur-xl px-4 py-2 text-sm font-bold text-white disabled:opacity-60";
+const secondaryButton = "rounded-lg border border-[#cad5cb]/70 px-3 py-2 text-xs font-bold text-[#163c30] disabled:opacity-60";
 
 async function parseJson(response: Response) {
   const body = (await response.json().catch(() => ({}))) as { error?: unknown };
@@ -98,7 +98,7 @@ export function ProjectBoard({ initiatives, projects, milestones }: { initiative
   }
 
   return <section className="grid gap-6 lg:grid-cols-[.85fr_1.15fr]">
-    <form className="grid gap-4 rounded-2xl border border-[#dce4dd] bg-white p-7" onSubmit={createProject}>
+    <form className="grid gap-4 rounded-2xl border border-[#dce4dd]/70 bg-white/70 backdrop-blur-xl p-7" onSubmit={createProject}>
       <div>
         <p className="text-[10px] font-bold tracking-[.14em] text-[#64726b]">NEW PROJECT</p>
         <h2 className="mt-2 font-serif text-2xl">Create project</h2>
@@ -146,7 +146,7 @@ export function ProjectBoard({ initiatives, projects, milestones }: { initiative
       {projects.length ? projects.map((project) => {
         const projectMilestones = milestonesByProject.get(project.id) ?? [];
         const initiative = initiatives.find((item) => item.id === project.initiativeId);
-        return <article className="rounded-2xl border border-[#dce4dd] bg-white p-7" key={project.id}>
+        return <article className="rounded-2xl border border-[#dce4dd]/70 bg-white/70 backdrop-blur-xl p-7" key={project.id}>
           {editingId === project.id ? <form className="grid gap-3" onSubmit={(event) => updateProject(event, project.id)}>
             <label className={labelClass}>Initiative<select className={inputClass} defaultValue={project.initiativeId} name="initiativeId" required>{initiatives.map((item) => <option key={item.id} value={item.id}>{item.title}</option>)}</select></label>
             <label className={labelClass}>Title<input className={inputClass} defaultValue={project.title} name="title" required /></label>
@@ -173,14 +173,14 @@ export function ProjectBoard({ initiatives, projects, milestones }: { initiative
             </div>
             <p className="mt-3 text-sm leading-6 text-[#64726b]">{project.purpose}</p>
             <div className="mt-5 grid gap-2">
-              {projectMilestones.length ? projectMilestones.map((milestone) => <div className="rounded-lg bg-[#f5f7f2] p-3" key={milestone.id}>
+              {projectMilestones.length ? projectMilestones.map((milestone) => <div className="rounded-lg bg-white/35 backdrop-blur-xl p-3" key={milestone.id}>
                 <p className="text-sm font-bold">{milestone.title}</p>
                 <p className="mt-1 text-xs text-[#64726b]">{milestone.outcome}</p>
-              </div>) : <p className="rounded-lg bg-[#f5f7f2] p-3 text-xs text-[#64726b]">No milestones yet.</p>}
+              </div>) : <p className="rounded-lg bg-white/35 backdrop-blur-xl p-3 text-xs text-[#64726b]">No milestones yet.</p>}
             </div>
           </>}
         </article>;
-      }) : <div className="rounded-2xl border border-[#dce4dd] bg-white p-7 text-sm text-[#64726b]">No active projects.</div>}
+      }) : <div className="rounded-2xl border border-[#dce4dd]/70 bg-white/70 backdrop-blur-xl p-7 text-sm text-[#64726b]">No active projects.</div>}
     </div>
   </section>;
 }

@@ -46,7 +46,7 @@ export function BootstrapButton() {
   }
 
   return <div>
-    <button className="rounded-lg bg-[#163c30] px-5 py-3 text-sm font-bold text-white disabled:opacity-60" disabled={pending} onClick={bootstrap} type="button">
+    <button className="rounded-lg bg-[#163c30]/85 backdrop-blur-xl px-5 py-3 text-sm font-bold text-white disabled:opacity-60" disabled={pending} onClick={bootstrap} type="button">
       {pending ? "Creating workspace..." : "Create starter workspace"}
     </button>
     {error ? <p className="mt-3 text-sm font-bold text-red-700">{error}</p> : null}
@@ -68,7 +68,7 @@ export function TaskStatusButton({ taskId, nextStatus, children }: { taskId: str
     });
   }
 
-  return <button className="rounded-lg border border-[#cad5cb] px-3 py-2 text-xs font-bold text-[#163c30] disabled:opacity-60" disabled={pending} onClick={updateTask} type="button">
+  return <button className="rounded-lg border border-[#cad5cb]/70 px-3 py-2 text-xs font-bold text-[#163c30] disabled:opacity-60" disabled={pending} onClick={updateTask} type="button">
     {pending ? "Saving..." : children}
   </button>;
 }
@@ -102,9 +102,9 @@ export function OpportunityForm() {
   }
 
   return <form className="mt-5 grid gap-3" onSubmit={submit}>
-    <input className="rounded-lg border border-[#cad5cb] bg-white px-3 py-3 text-sm" name="title" placeholder="New opportunity or idea" required />
-    <textarea className="min-h-20 rounded-lg border border-[#cad5cb] bg-white px-3 py-3 text-sm" name="note" placeholder="Optional note" />
-    <button className="rounded-lg bg-[#163c30] px-4 py-3 text-sm font-bold text-white disabled:opacity-60" disabled={pending} type="submit">
+    <input className="rounded-lg border border-[#cad5cb]/70 bg-white/70 backdrop-blur-xl px-3 py-3 text-sm" name="title" placeholder="New opportunity or idea" required />
+    <textarea className="min-h-20 rounded-lg border border-[#cad5cb]/70 bg-white/70 backdrop-blur-xl px-3 py-3 text-sm" name="note" placeholder="Optional note" />
+    <button className="rounded-lg bg-[#163c30]/85 backdrop-blur-xl px-4 py-3 text-sm font-bold text-white disabled:opacity-60" disabled={pending} type="submit">
       {pending ? "Saving..." : "Save to inbox"}
     </button>
     {error ? <p className="text-sm font-bold text-red-700">{error}</p> : null}
@@ -112,7 +112,7 @@ export function OpportunityForm() {
 }
 
 export function PlanShortcutButton() {
-  return <a className="rounded-lg border border-[#cad5cb] px-4 py-2 text-sm font-bold text-[#163c30]" href="/dashboard/planning">Plan with Claude</a>;
+  return <a className="rounded-lg border border-[#cad5cb]/70 px-4 py-2 text-sm font-bold text-[#163c30]" href="/dashboard/planning">Plan with Claude</a>;
 }
 
 export function PlannerForm({ projectId }: { projectId?: string }) {
@@ -143,17 +143,17 @@ export function PlannerForm({ projectId }: { projectId?: string }) {
     });
   }
 
-  return <div className="rounded-2xl border border-[#dce4dd] bg-white p-7">
+  return <div className="rounded-2xl border border-[#dce4dd]/70 bg-white/70 backdrop-blur-xl p-7">
     <p className="text-[10px] font-bold tracking-[.14em] text-[#64726b]">AI PLANNING</p>
     <h2 className="mt-2 font-serif text-2xl">Draft the next project plan.</h2>
     <form className="mt-5 grid gap-3" onSubmit={submit}>
-      <textarea id="planner-instructions" className="min-h-24 rounded-lg border border-[#cad5cb] px-3 py-3 text-sm" disabled={!projectId} name="instructions" placeholder={projectId ? "Constraints, deadline, available hours, or outcome..." : "Create a project first."} />
-      <button className="rounded-lg bg-[#163c30] px-4 py-3 text-sm font-bold text-white disabled:opacity-60" disabled={pending || !projectId} type="submit">
+      <textarea id="planner-instructions" className="min-h-24 rounded-lg border border-[#cad5cb]/70 px-3 py-3 text-sm" disabled={!projectId} name="instructions" placeholder={projectId ? "Constraints, deadline, available hours, or outcome..." : "Create a project first."} />
+      <button className="rounded-lg bg-[#163c30]/85 backdrop-blur-xl px-4 py-3 text-sm font-bold text-white disabled:opacity-60" disabled={pending || !projectId} type="submit">
         {pending ? "Planning..." : "Create draft"}
       </button>
     </form>
     {error ? <p className="mt-3 text-sm font-bold text-red-700">{error}</p> : null}
-    {result?.proposal ? <div className="mt-5 rounded-lg bg-[#f5f7f2] p-4">
+    {result?.proposal ? <div className="mt-5 rounded-lg bg-white/35 backdrop-blur-xl p-4">
       <p className="text-sm font-bold text-[#16231e]">Draft created for review</p>
       {result.proposal.milestones.map((milestone) => <div className="mt-3" key={milestone.title}>
         <p className="text-sm font-bold text-[#163c30]">{milestone.title}</p>
@@ -184,7 +184,7 @@ export function ApproveDraftButton({ draftId }: { draftId: string }) {
   }
 
   return <div>
-    <button className="rounded-lg bg-[#163c30] px-3 py-2 text-xs font-bold text-white disabled:opacity-60" disabled={pending} onClick={approve} type="button">
+    <button className="rounded-lg bg-[#163c30]/85 backdrop-blur-xl px-3 py-2 text-xs font-bold text-white disabled:opacity-60" disabled={pending} onClick={approve} type="button">
       {pending ? "Approving..." : "Approve draft"}
     </button>
     {error ? <p className="mt-2 text-xs font-bold text-red-700">{error}</p> : null}

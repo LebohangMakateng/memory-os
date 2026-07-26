@@ -10,7 +10,7 @@ function SparklesIcon() {
 
 export function WeeklyAiHeaderActions() {
   return <div className="flex flex-wrap gap-2">
-    <a aria-label="Weekly history" className="grid size-11 place-items-center rounded-lg border border-[#cad5cb] bg-white text-[#163c30]" href="/dashboard/week/history" title="Weekly history"><ClockIcon /></a>
-    <button aria-label="AI weekly planner" className="grid size-11 place-items-center rounded-lg bg-[#163c30] text-white" onClick={() => window.dispatchEvent(new Event("toggle-weekly-ai"))} title="AI weekly planner" type="button"><SparklesIcon /></button>
+    <a aria-label="Weekly history" className="grid size-11 place-items-center rounded-lg border border-[#cad5cb]/70 bg-white/70 backdrop-blur-xl text-[#163c30]" href="/dashboard/week/history" title="Weekly history"><ClockIcon /></a>
+    <button aria-label="AI weekly planner" className="grid size-11 place-items-center rounded-lg bg-[#163c30]/85 backdrop-blur-xl text-white" onClick={() => window.dispatchEvent(new Event("toggle-weekly-ai"))} title="AI weekly planner" type="button"><SparklesIcon /></button>
   </div>;
 }

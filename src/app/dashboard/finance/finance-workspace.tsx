@@ -29,10 +29,10 @@ type Props = {
   categoryActuals: Record<string, number>;
 };
 
-const inputClass = "rounded-lg border border-[#cad5cb] bg-white px-3 py-2 text-sm outline-none focus:border-[#163c30] focus:ring-2 focus:ring-[#d8ef61]";
+const inputClass = "rounded-lg border border-[#cad5cb]/70 bg-white/70 backdrop-blur-xl px-3 py-2 text-sm outline-none focus:border-[#163c30] focus:ring-2 focus:ring-[#d8ef61]";
 const labelClass = "grid gap-1 text-xs font-bold text-[#32443a]";
-const primaryButton = "rounded-lg bg-[#163c30] px-4 py-2 text-sm font-bold text-white disabled:opacity-60";
-const secondaryButton = "rounded-lg border border-[#cad5cb] px-3 py-2 text-xs font-bold text-[#163c30] disabled:opacity-60";
+const primaryButton = "rounded-lg bg-[#163c30]/85 backdrop-blur-xl px-4 py-2 text-sm font-bold text-white disabled:opacity-60";
+const secondaryButton = "rounded-lg border border-[#cad5cb]/70 px-3 py-2 text-xs font-bold text-[#163c30] disabled:opacity-60";
 
 async function parseJson(response: Response) {
   const body = (await response.json().catch(() => ({}))) as { error?: unknown };
@@ -166,21 +166,21 @@ export function FinanceWorkspace({ accounts, categories, transactions, plan, bud
 
   return <section className="grid gap-6">
     <FinanceAssistant />
-    <div className="scroll-mt-28 grid gap-3 md:grid-cols-4" id="finance-overview">
+    <div className="scroll-mt-28 grid grid-cols-2 gap-3 md:grid-cols-4" id="finance-overview">
       <Metric label="Income" value={formatCurrency(summary.incomeCents)} />
       <Metric label="Expenses" value={formatCurrency(summary.expenseCents)} />
       <Metric label="Remaining after savings" value={formatCurrency(summary.remainingSpendableCents)} />
       <Metric label="Planned spare" value={formatCurrency(summary.plannedRemainingCents)} />
     </div>
 
-    {(error || saved) ? <div className="rounded-lg border border-[#cad5cb] bg-white px-4 py-3 text-sm font-bold">
+    {(error || saved) ? <div className="rounded-lg border border-[#cad5cb]/70 bg-white/70 backdrop-blur-xl px-4 py-3 text-sm font-bold">
       {saved ? <p className="text-[#163c30]">{saved}</p> : null}
       {error ? <p className="text-red-700">{error}</p> : null}
     </div> : null}
 
     <section className="grid gap-6 xl:grid-cols-[.85fr_1.15fr]">
       <div className="grid gap-6">
-        <form className="scroll-mt-28 grid gap-4 rounded-2xl border border-[#dce4dd] bg-white p-6" id="finance-accounts" onSubmit={createAccount}>
+        <details className="mobile-disclosure" id="finance-accounts-panel"><summary className="rounded-2xl border border-[#dce4dd]/70 bg-white/70 p-4 text-sm font-bold text-[#163c30] shadow-sm backdrop-blur-xl">Accounts</summary><div className="mobile-disclosure-content mt-3 md:mt-0"><form className="scroll-mt-28 grid gap-4 rounded-2xl border border-[#dce4dd]/70 bg-white/70 backdrop-blur-xl p-6" id="finance-accounts" onSubmit={createAccount}>
           <div>
             <p className="text-[10px] font-bold uppercase tracking-[.14em] text-[#64726b]">Accounts</p>
             <h2 className="mt-2 font-serif text-2xl">Add account</h2>
@@ -196,11 +196,11 @@ export function FinanceWorkspace({ accounts, categories, transactions, plan, bud
           </div>
           <button className={primaryButton} disabled={pending} type="submit">Save account</button>
           <div className="grid gap-2 text-sm text-[#64726b]">
-            {accounts.length ? accounts.map((account) => <p className="rounded-lg bg-[#f5f7f2] px-3 py-2" key={account.id}>{account.name} <span className="font-bold text-[#163c30]">{account.currency}</span>{account.masked_identifier ? " " + account.masked_identifier : ""}</p>) : <p>No accounts yet.</p>}
+            {accounts.length ? accounts.map((account) => <p className="rounded-lg bg-white/35 backdrop-blur-xl px-3 py-2" key={account.id}>{account.name} <span className="font-bold text-[#163c30]">{account.currency}</span>{account.masked_identifier ? " " + account.masked_identifier : ""}</p>) : <p>No accounts yet.</p>}
           </div>
-        </form>
+        </form></div></details>
 
-        <form className="scroll-mt-28 grid gap-4 rounded-2xl border border-[#dce4dd] bg-white p-6" id="finance-transactions" onSubmit={saveTransaction}>
+        <form className="scroll-mt-28 grid gap-4 rounded-2xl border border-[#dce4dd]/70 bg-white/70 backdrop-blur-xl p-6" id="finance-transactions" onSubmit={saveTransaction}>
           <div className="flex items-start justify-between gap-3">
             <div><p className="text-[10px] font-bold uppercase tracking-[.14em] text-[#64726b]">Manual record</p><h2 className="mt-2 font-serif text-2xl">{editing ? "Edit transaction" : "Add transaction"}</h2></div>
             {editing ? <button className={secondaryButton} onClick={() => setEditing(null)} type="button">Cancel</button> : null}
@@ -223,7 +223,7 @@ export function FinanceWorkspace({ accounts, categories, transactions, plan, bud
       </div>
 
       <div className="grid gap-6">
-        <form className="scroll-mt-28 grid gap-4 rounded-2xl border border-[#dce4dd] bg-white p-6" id="finance-monthly-plan" onSubmit={savePlan}>
+        <details className="mobile-disclosure"><summary className="rounded-2xl border border-[#dce4dd]/70 bg-white/70 p-4 text-sm font-bold text-[#163c30] shadow-sm backdrop-blur-xl">Monthly plan</summary><div className="mobile-disclosure-content mt-3 md:mt-0"><form className="scroll-mt-28 grid gap-4 rounded-2xl border border-[#dce4dd]/70 bg-white/70 backdrop-blur-xl p-6" id="finance-monthly-plan" onSubmit={savePlan}>
           <div><p className="text-[10px] font-bold uppercase tracking-[.14em] text-[#64726b]">Monthly plan</p><h2 className="mt-2 font-serif text-2xl">{month}</h2></div>
           <div className="grid gap-3 sm:grid-cols-3">
             <label className={labelClass}>Expected income (R)<input className={inputClass} defaultValue={moneyValue(plan?.expected_income)} inputMode="decimal" name="expectedIncome" /></label>
@@ -231,7 +231,7 @@ export function FinanceWorkspace({ accounts, categories, transactions, plan, bud
             <label className={labelClass}>Currency<input className={inputClass} readOnly value="ZAR" /></label>
           </div>
           <div className="grid gap-2">
-            {expenseCategories.map((category) => <div className="grid items-center gap-2 rounded-lg bg-[#f5f7f2] p-3 sm:grid-cols-[1fr_130px_130px]" key={category.id}>
+            {expenseCategories.map((category) => <div className="grid items-center gap-2 rounded-lg bg-white/35 backdrop-blur-xl p-3 sm:grid-cols-[1fr_130px_130px]" key={category.id}>
               <span className="text-sm font-bold text-[#16231e]">{category.name}</span>
               <span className="text-xs text-[#64726b]">Actual {formatCurrency(categoryActuals[category.id] ?? 0)}</span>
               <input className={inputClass} defaultValue={budgetByCategory.get(category.id) ?? "0.00"} inputMode="decimal" name={"budget-" + category.id} />
@@ -239,12 +239,12 @@ export function FinanceWorkspace({ accounts, categories, transactions, plan, bud
           </div>
           <label className={labelClass}>Notes<textarea className={inputClass + " min-h-20"} defaultValue={plan?.notes ?? ""} name="notes" /></label>
           <button className={primaryButton} disabled={pending} type="submit">Save monthly plan</button>
-        </form>
+        </form></div></details>
 
-        <article className="scroll-mt-28 rounded-2xl border border-[#dce4dd] bg-white p-6" id="finance-transaction-list">
+        <article className="scroll-mt-28 rounded-2xl border border-[#dce4dd]/70 bg-white/70 backdrop-blur-xl p-6" id="finance-transaction-list">
           <div><p className="text-[10px] font-bold uppercase tracking-[.14em] text-[#64726b]">Transactions</p><h2 className="mt-2 font-serif text-2xl">Current month</h2></div>
           <div className="mt-5 grid gap-3">
-            {transactions.length ? transactions.map((transaction) => <section className="rounded-xl bg-[#f5f7f2] p-4" key={transaction.id}>
+            {transactions.length ? transactions.map((transaction) => <section className="rounded-xl bg-white/35 backdrop-blur-xl p-4" key={transaction.id}>
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
                   <p className="text-sm font-bold text-[#16231e]">{transaction.description}</p>
@@ -256,7 +256,7 @@ export function FinanceWorkspace({ accounts, categories, transactions, plan, bud
                 <button className={secondaryButton} onClick={() => setEditing(transaction)} type="button">Edit</button>
                 <button className={secondaryButton} disabled={pendingId === transaction.id} onClick={() => deleteTransaction(transaction.id)} type="button">Delete</button>
               </div>
-            </section>) : <p className="rounded-xl bg-[#f5f7f2] p-4 text-sm text-[#64726b]">No transactions for {month} yet.</p>}
+            </section>) : <p className="rounded-xl bg-white/35 backdrop-blur-xl p-4 text-sm text-[#64726b]">No transactions for {month} yet.</p>}
           </div>
         </article>
       </div>
@@ -265,7 +265,7 @@ export function FinanceWorkspace({ accounts, categories, transactions, plan, bud
 }
 
 function Metric({ label, value }: { label: string; value: string }) {
-  return <article className="rounded-2xl border border-[#dce4dd] bg-white p-5">
+  return <article className="rounded-2xl border border-[#dce4dd]/70 bg-white/70 backdrop-blur-xl p-5">
     <p className="text-[10px] font-bold uppercase tracking-[.14em] text-[#64726b]">{label}</p>
     <p className="mt-2 text-2xl font-black text-[#16231e]">{value}</p>
   </article>;

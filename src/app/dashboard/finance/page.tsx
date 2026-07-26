@@ -90,29 +90,28 @@ export default async function FinancePage() {
 
 function FinanceTopMenu() {
   const items = [
-    { href: "#finance-assistant", label: "Assistant" },
-    { href: "#finance-overview", label: "Overview" },
-    { href: "#finance-accounts", label: "Accounts" },
-    { href: "#finance-transactions", label: "Transactions" },
-    { href: "#finance-monthly-plan", label: "Monthly Plan" },
-    { href: "#finance-statements", label: "Statements" },
-    { href: "#finance-analytics", label: "Analytics" },
+    { href: "#finance-assistant", label: "AI" },
+    { href: "#finance-overview", label: "Now" },
+    { href: "#finance-transactions", label: "Txns" },
+    { href: "#finance-monthly-plan", label: "Plan" },
+    { href: "#finance-statements", label: "Import" },
+    { href: "#finance-analytics", label: "Stats" },
     { href: "#finance-forecast", label: "Forecast" },
     { href: "#finance-goals", label: "Goals" },
     { href: "#finance-planning-tools", label: "Scenarios" },
     { href: "#finance-settings", label: "Settings" },
   ];
 
-  return <nav className="sticky top-0 z-20 mb-8 -mx-5 border-y border-[#dce4dd] bg-[#f5f7f2]/95 px-5 py-3 backdrop-blur md:-mx-14 md:px-14" aria-label="Finance sections">
+  return <nav className="sticky top-0 z-20 mb-8 py-3" aria-label="Finance sections">
     <div className="flex gap-2 overflow-x-auto pb-1">
-      {items.map((item) => <a className="shrink-0 rounded-lg border border-[#cad5cb] bg-white px-3 py-2 text-xs font-bold text-[#163c30] hover:border-[#163c30]" href={item.href} key={item.href}>{item.label}</a>)}
+      {items.map((item) => <a className="shrink-0 rounded-full border border-[#cad5cb]/70 bg-white/70 px-3 py-2 text-[11px] font-bold text-[#163c30] shadow-sm backdrop-blur-xl hover:border-[#163c30] md:rounded-lg md:text-xs" href={item.href} key={item.href}>{item.label}</a>)}
     </div>
   </nav>;
 }
 
 function FunctionalGroup({ eyebrow, title, children }: { eyebrow: string; title: string; children: React.ReactNode }) {
   return <section className="mb-8 grid gap-5">
-    <header className="border-b border-[#dce4dd] pb-3">
+    <header className="border-b border-[#dce4dd]/70 pb-3">
       <p className="text-[10px] font-bold uppercase tracking-[.14em] text-[#64726b]">{eyebrow}</p>
       <h2 className="mt-1 font-serif text-2xl text-[#16231e]">{title}</h2>
     </header>

@@ -9,11 +9,11 @@ type ProposalMilestone = { title: string; outcome: string; tasks: ProposalTask[]
 type Proposal = { assumptions: string[]; confidentialityNotes: string[]; milestones: ProposalMilestone[] };
 type Draft = { id: string; proposal: unknown; prompt: string | null };
 
-const inputClass = "rounded-lg border border-[#cad5cb] bg-white px-3 py-2 text-sm";
+const inputClass = "rounded-lg border border-[#cad5cb]/70 bg-white/70 backdrop-blur-xl px-3 py-2 text-sm";
 const textAreaClass = inputClass + " min-h-16";
 const labelClass = "grid gap-1 text-xs font-bold text-[#32443a]";
-const primaryButton = "rounded-lg bg-[#163c30] px-4 py-2 text-sm font-bold text-white disabled:opacity-60";
-const secondaryButton = "rounded-lg border border-[#cad5cb] px-3 py-2 text-xs font-bold text-[#163c30] disabled:opacity-60";
+const primaryButton = "rounded-lg bg-[#163c30]/85 backdrop-blur-xl px-4 py-2 text-sm font-bold text-white disabled:opacity-60";
+const secondaryButton = "rounded-lg border border-[#cad5cb]/70 px-3 py-2 text-xs font-bold text-[#163c30] disabled:opacity-60";
 
 const defaultImpact: Impact = { revenue: 3, learning: 3, portfolio: 3, automation: 2, enjoyment: 3 };
 
@@ -129,19 +129,19 @@ function DraftCard({ draft }: { draft: Draft }) {
     saveDraft(event.currentTarget, false);
   }
 
-  return <form className="grid gap-5 rounded-2xl border border-[#dce4dd] bg-white p-7" onSubmit={submit}>
+  return <form className="grid gap-5 rounded-2xl border border-[#dce4dd]/70 bg-white/70 backdrop-blur-xl p-7" onSubmit={submit}>
     <div className="flex flex-wrap items-start justify-between gap-3">
       <div><p className="text-[10px] font-bold tracking-[.14em] text-[#64726b]">DRAFT</p><h2 className="mt-2 font-serif text-2xl">{proposal.milestones[0]?.title ?? "Planning draft"}</h2>{draft.prompt ? <p className="mt-2 text-xs text-[#64726b]">{draft.prompt}</p> : null}</div>
       <div className="flex flex-wrap gap-2"><button className={secondaryButton} disabled={Boolean(pendingAction)} type="submit">{pendingAction === "save" ? "Saving..." : "Save draft"}</button><button className={primaryButton} disabled={Boolean(pendingAction)} onClick={(event) => saveDraft(event.currentTarget.form as HTMLFormElement, true)} type="button">{pendingAction === "approve" ? "Approving..." : "Save + approve"}</button></div>
     </div>
-    {proposal.assumptions.length ? <div className="rounded-lg bg-[#f5f7f2] p-3"><p className="text-xs font-bold text-[#64726b]">Assumptions</p><ul className="mt-2 list-disc pl-5 text-xs text-[#64726b]">{proposal.assumptions.map((item) => <li key={item}>{item}</li>)}</ul></div> : null}
-    {proposal.confidentialityNotes.length ? <div className="rounded-lg bg-[#f5f7f2] p-3"><p className="text-xs font-bold text-[#64726b]">Confidentiality notes</p><ul className="mt-2 list-disc pl-5 text-xs text-[#64726b]">{proposal.confidentialityNotes.map((item) => <li key={item}>{item}</li>)}</ul></div> : null}
+    {proposal.assumptions.length ? <div className="rounded-lg bg-white/35 backdrop-blur-xl p-3"><p className="text-xs font-bold text-[#64726b]">Assumptions</p><ul className="mt-2 list-disc pl-5 text-xs text-[#64726b]">{proposal.assumptions.map((item) => <li key={item}>{item}</li>)}</ul></div> : null}
+    {proposal.confidentialityNotes.length ? <div className="rounded-lg bg-white/35 backdrop-blur-xl p-3"><p className="text-xs font-bold text-[#64726b]">Confidentiality notes</p><ul className="mt-2 list-disc pl-5 text-xs text-[#64726b]">{proposal.confidentialityNotes.map((item) => <li key={item}>{item}</li>)}</ul></div> : null}
     <div className="grid gap-5">
-      {proposal.milestones.map((milestone, milestoneIndex) => <section className="grid gap-3 rounded-lg bg-[#f5f7f2] p-4" key={milestoneIndex}>
+      {proposal.milestones.map((milestone, milestoneIndex) => <section className="grid gap-3 rounded-lg bg-white/35 backdrop-blur-xl p-4" key={milestoneIndex}>
         <label className={labelClass}>Milestone title<input className={inputClass} defaultValue={milestone.title} name={"milestone-" + milestoneIndex + "-title"} required /></label>
         <label className={labelClass}>Milestone outcome<textarea className={textAreaClass} defaultValue={milestone.outcome} name={"milestone-" + milestoneIndex + "-outcome"} required /></label>
         <div className="grid gap-3">
-          {milestone.tasks.map((task, taskIndex) => <div className="grid gap-3 rounded-lg border border-[#dce4dd] bg-white p-4" key={taskIndex}>
+          {milestone.tasks.map((task, taskIndex) => <div className="grid gap-3 rounded-lg border border-[#dce4dd]/70 bg-white/70 backdrop-blur-xl p-4" key={taskIndex}>
             <label className={labelClass}>Task title<input className={inputClass} defaultValue={task.title} name={"task-" + milestoneIndex + "-" + taskIndex + "-title"} required /></label>
             <label className={labelClass}>Next action<textarea className={textAreaClass} defaultValue={task.nextAction} name={"task-" + milestoneIndex + "-" + taskIndex + "-nextAction"} required /></label>
             <div className="grid gap-3 sm:grid-cols-2"><label className={labelClass}>Reason<textarea className={textAreaClass} defaultValue={task.reason} name={"task-" + milestoneIndex + "-" + taskIndex + "-reason"} required /></label><label className={labelClass}>Expected outcome<textarea className={textAreaClass} defaultValue={task.expectedOutcome} name={"task-" + milestoneIndex + "-" + taskIndex + "-expectedOutcome"} required /></label></div>
@@ -156,6 +156,6 @@ function DraftCard({ draft }: { draft: Draft }) {
 }
 
 export function PlanningDraftManager({ drafts }: { drafts: Draft[] }) {
-  if (!drafts.length) return <article className="rounded-2xl border border-[#dce4dd] bg-white p-7"><h2 className="font-serif text-2xl">Pending drafts</h2><p className="mt-5 text-sm text-[#64726b]">No pending drafts.</p></article>;
+  if (!drafts.length) return <article className="rounded-2xl border border-[#dce4dd]/70 bg-white/70 backdrop-blur-xl p-7"><h2 className="font-serif text-2xl">Pending drafts</h2><p className="mt-5 text-sm text-[#64726b]">No pending drafts.</p></article>;
   return <section className="grid gap-5">{drafts.map((draft) => <DraftCard draft={draft} key={draft.id} />)}</section>;
 }

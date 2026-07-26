@@ -63,23 +63,23 @@ export function WeeklyHistoryList() {
     return () => { active = false; };
   }, []);
 
-  if (loading) return <p className="rounded-2xl border border-[#dce4dd] bg-white p-6 text-sm text-[#64726b]">Loading weekly history...</p>;
-  if (error) return <p className="rounded-2xl border border-red-200 bg-white p-6 text-sm font-bold text-red-700">{error}</p>;
-  if (!plans.length) return <p className="rounded-2xl border border-[#dce4dd] bg-white p-6 text-sm text-[#64726b]">No previous weekly plans have been saved yet.</p>;
+  if (loading) return <p className="rounded-2xl border border-[#dce4dd]/70 bg-white/70 backdrop-blur-xl p-6 text-sm text-[#64726b]">Loading weekly history...</p>;
+  if (error) return <p className="rounded-2xl border border-red-200/70 bg-white/70 backdrop-blur-xl p-6 text-sm font-bold text-red-700">{error}</p>;
+  if (!plans.length) return <p className="rounded-2xl border border-[#dce4dd]/70 bg-white/70 backdrop-blur-xl p-6 text-sm text-[#64726b]">No previous weekly plans have been saved yet.</p>;
 
   return <section className="grid gap-4">
-    {plans.map((plan) => <article className="rounded-2xl border border-[#dce4dd] bg-white p-6" key={plan.id}>
+    {plans.map((plan) => <article className="rounded-2xl border border-[#dce4dd]/70 bg-white/70 backdrop-blur-xl p-6" key={plan.id}>
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <p className="text-[10px] font-bold uppercase tracking-[.14em] text-[#64726b]">Week of {plan.weekStart}</p>
           <h2 className="mt-2 font-serif text-2xl">{plan.weekLabel}</h2>
         </div>
-        <p className="rounded-lg bg-[#f5f7f2] px-3 py-2 text-xs font-bold text-[#64726b]">Updated {new Date(plan.updatedAt).toLocaleDateString()}</p>
+        <p className="rounded-lg bg-white/35 backdrop-blur-xl px-3 py-2 text-xs font-bold text-[#64726b]">Updated {new Date(plan.updatedAt).toLocaleDateString()}</p>
       </div>
       {plan.focus ? <p className="mt-4 text-sm font-bold text-[#16231e]">{plan.focus}</p> : null}
       {plan.mainBuild ? <p className="mt-2 text-sm text-[#64726b]">Main build: {plan.mainBuild}</p> : null}
       {plan.weeklyTargets?.length ? <div className="mt-5 grid gap-2">
-        {plan.weeklyTargets.map((target) => <div className="flex items-start gap-2 rounded-lg bg-[#f5f7f2] px-3 py-2 text-sm" key={target.id}>
+        {plan.weeklyTargets.map((target) => <div className="flex items-start gap-2 rounded-lg bg-white/35 backdrop-blur-xl px-3 py-2 text-sm" key={target.id}>
           <span className="mt-0.5 font-bold text-[#163c30]">{target.done ? "Done" : "Open"}</span>
           <span>{target.label || "Untitled target"}</span>
         </div>)}

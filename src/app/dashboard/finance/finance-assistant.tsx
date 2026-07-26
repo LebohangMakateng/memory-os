@@ -6,9 +6,9 @@ import { useRouter } from "next/navigation";
 type ChatMessage = { role: "user" | "assistant"; content: string };
 type PendingAction = { id: string; action_type: string; summary: string; status: string };
 
-const inputClass = "rounded-lg border border-[#cad5cb] bg-white px-3 py-3 text-sm leading-6 outline-none focus:border-[#163c30] focus:ring-2 focus:ring-[#d8ef61]";
-const primaryButton = "rounded-lg bg-[#163c30] px-4 py-3 text-sm font-bold text-white disabled:opacity-60";
-const secondaryButton = "rounded-lg border border-[#cad5cb] px-3 py-2 text-xs font-bold text-[#163c30] disabled:opacity-60";
+const inputClass = "rounded-lg border border-[#cad5cb]/70 bg-white/70 backdrop-blur-xl px-3 py-3 text-sm leading-6 outline-none focus:border-[#163c30] focus:ring-2 focus:ring-[#d8ef61]";
+const primaryButton = "rounded-lg bg-[#163c30]/85 backdrop-blur-xl px-4 py-3 text-sm font-bold text-white disabled:opacity-60";
+const secondaryButton = "rounded-lg border border-[#cad5cb]/70 px-3 py-2 text-xs font-bold text-[#163c30] disabled:opacity-60";
 
 async function parseJson(response: Response) {
   const body = (await response.json().catch(() => ({}))) as { error?: unknown };
@@ -68,24 +68,24 @@ export function FinanceAssistant() {
     });
   }
 
-  return <article className="scroll-mt-28 rounded-2xl border border-[#dce4dd] bg-white p-6" id="finance-assistant">
+  return <article className="scroll-mt-28 rounded-2xl border border-[#dce4dd]/70 bg-white/70 backdrop-blur-xl p-6" id="finance-assistant">
     <div className="flex flex-wrap items-start justify-between gap-3">
       <div>
         <p className="text-[10px] font-bold uppercase tracking-[.14em] text-[#64726b]">AI assistant</p>
         <h2 className="mt-2 font-serif text-2xl">Finance chat</h2>
       </div>
-      <span className="rounded-lg bg-[#f5f7f2] px-3 py-2 text-xs font-bold text-[#163c30]">ZAR only</span>
+      <span className="rounded-lg bg-white/35 backdrop-blur-xl px-3 py-2 text-xs font-bold text-[#163c30]">ZAR only</span>
     </div>
 
     <div className="mt-5 grid max-h-[360px] gap-3 overflow-y-auto pr-1">
-      {messages.map((message, index) => <section className={message.role === "assistant" ? "rounded-xl bg-[#f5f7f2] p-4" : "rounded-xl bg-[#163c30] p-4 text-white"} key={index}>
+      {messages.map((message, index) => <section className={message.role === "assistant" ? "rounded-xl bg-white/35 backdrop-blur-xl p-4" : "rounded-xl bg-[#163c30]/85 backdrop-blur-xl p-4 text-white"} key={index}>
         <p className="whitespace-pre-wrap text-sm leading-6">{message.content}</p>
       </section>)}
     </div>
 
     {actions.length ? <div className="mt-5 grid gap-3">
       <p className="text-[10px] font-bold uppercase tracking-[.14em] text-[#64726b]">Pending confirmations</p>
-      {actions.map((action) => <section className="rounded-xl border border-[#cad5cb] bg-[#fbfcf8] p-4" key={action.id}>
+      {actions.map((action) => <section className="rounded-xl border border-[#cad5cb]/70 bg-white/45 backdrop-blur-xl p-4" key={action.id}>
         <p className="text-sm font-bold text-[#16231e]">{action.summary}</p>
         <p className="mt-1 text-xs text-[#64726b]">No data changes until you confirm.</p>
         <div className="mt-3 flex gap-2">

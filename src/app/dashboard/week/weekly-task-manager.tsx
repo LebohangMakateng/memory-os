@@ -9,11 +9,11 @@ type Priority = { id: string; title: string; projectId: string | null; rank: num
 export type WeeklyTaskManagerTask = { id: string; milestoneId: string; weeklyPriorityId: string | null; title: string; description: string | null; nextAction: string; reason: string; expectedOutcome: string; status: string; dueDate: Date | null; estimateMinutes: number; difficulty: number; energy: string; focusType: string; shareStatus: string };
 type Task = WeeklyTaskManagerTask;
 
-const inputClass = "rounded-lg border border-[#cad5cb] bg-white px-3 py-2 text-sm";
+const inputClass = "rounded-lg border border-[#cad5cb]/70 bg-white/70 backdrop-blur-xl px-3 py-2 text-sm";
 const textAreaClass = inputClass + " min-h-16 overflow-hidden resize-y leading-6";
 const labelClass = "grid gap-1 text-xs font-bold text-[#32443a]";
-const primaryButton = "rounded-lg bg-[#163c30] px-4 py-2 text-sm font-bold text-white disabled:opacity-60";
-const secondaryButton = "rounded-lg border border-[#cad5cb] px-3 py-2 text-xs font-bold text-[#163c30] disabled:opacity-60";
+const primaryButton = "rounded-lg bg-[#163c30]/85 backdrop-blur-xl px-4 py-2 text-sm font-bold text-white disabled:opacity-60";
+const secondaryButton = "rounded-lg border border-[#cad5cb]/70 px-3 py-2 text-xs font-bold text-[#163c30] disabled:opacity-60";
 function PlusIcon() {
   return <svg aria-hidden="true" className="size-4" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24"><path d="M12 5v14" /><path d="M5 12h14" /></svg>;
 }
@@ -187,17 +187,17 @@ export function WeeklyTaskManager({ milestones, priorities, tasks }: { milestone
   }
 
   return <section className="grid gap-6">
-    {tasksOpen ? <article className="rounded-2xl border border-[#dce4dd] bg-white p-6">
+    {tasksOpen ? <article className="rounded-2xl border border-[#dce4dd]/70 bg-white/70 backdrop-blur-xl p-6">
       <div className="mb-5 flex flex-wrap items-start justify-between gap-3">
         <div><p className="text-[10px] font-bold tracking-[.14em] text-[#64726b]">TASKS</p><h2 className="mt-2 font-serif text-2xl text-[#16231e]">Weekly tasks</h2></div>
         <div className="flex gap-2">
-          {!addingTask ? <button aria-label="Add weekly task" className="grid size-10 place-items-center rounded-lg bg-[#163c30] text-white" onClick={() => setAddingTask(true)} title="Add weekly task" type="button"><PlusIcon /></button> : null}
-          <button aria-label="Hide weekly tasks" className="grid size-10 place-items-center rounded-lg border border-[#cad5cb] text-[#163c30]" onClick={() => setTasksOpen(false)} title="Hide weekly tasks" type="button"><ChevronUpIcon /></button>
+          {!addingTask ? <button aria-label="Add weekly task" className="grid size-10 place-items-center rounded-lg bg-[#163c30]/85 backdrop-blur-xl text-white" onClick={() => setAddingTask(true)} title="Add weekly task" type="button"><PlusIcon /></button> : null}
+          <button aria-label="Hide weekly tasks" className="grid size-10 place-items-center rounded-lg border border-[#cad5cb]/70 text-[#163c30]" onClick={() => setTasksOpen(false)} title="Hide weekly tasks" type="button"><ChevronUpIcon /></button>
         </div>
       </div>
 
-      {addingTask ? <form className="mb-5 grid gap-4 rounded-xl bg-[#f5f7f2] p-4" onSubmit={createTask}>
-        <div className="flex flex-wrap items-start justify-between gap-3"><h3 className="font-serif text-xl text-[#16231e]">Add weekly task</h3><button aria-label="Close add weekly task form" className="grid size-9 place-items-center rounded-lg border border-[#cad5cb] bg-white text-[#163c30]" onClick={() => setAddingTask(false)} title="Close add weekly task form" type="button"><XIcon /></button></div>
+      {addingTask ? <form className="mb-5 grid gap-4 rounded-xl bg-white/35 backdrop-blur-xl p-4" onSubmit={createTask}>
+        <div className="flex flex-wrap items-start justify-between gap-3"><h3 className="font-serif text-xl text-[#16231e]">Add weekly task</h3><button aria-label="Close add weekly task form" className="grid size-9 place-items-center rounded-lg border border-[#cad5cb]/70 bg-white/70 backdrop-blur-xl text-[#163c30]" onClick={() => setAddingTask(false)} title="Close add weekly task form" type="button"><XIcon /></button></div>
         <TaskFields milestones={milestones} priorities={priorities} />
         <button className={primaryButton} disabled={pending || !milestones.length} type="submit">{pending ? "Saving..." : "Create task"}</button>
         {!milestones.length ? <p className="text-sm text-[#64726b]">Create a project milestone before adding tasks.</p> : null}
@@ -208,7 +208,7 @@ export function WeeklyTaskManager({ milestones, priorities, tasks }: { milestone
           const milestone = milestoneById.get(task.milestoneId);
           const priority = task.weeklyPriorityId ? priorityById.get(task.weeklyPriorityId) : null;
           const priorityLabel = priority ? " / " + priority.title : "";
-          return <article className="rounded-xl border border-[#dce4dd] bg-[#f5f7f2] p-4" key={task.id}>
+          return <article className="rounded-xl border border-[#dce4dd]/70 bg-white/35 backdrop-blur-xl p-4" key={task.id}>
             {editingId === task.id ? <form className="grid gap-3" onSubmit={(event) => updateTask(event, task.id)}>
               <TaskFields milestones={milestones} priorities={priorities} task={task} />
               <div className="flex flex-wrap gap-2"><button className={primaryButton} disabled={pendingId === task.id} type="submit">{pendingId === task.id ? "Saving..." : "Save"}</button><button className={secondaryButton} onClick={() => setEditingId("")} type="button">Cancel</button></div>
@@ -221,11 +221,11 @@ export function WeeklyTaskManager({ milestones, priorities, tasks }: { milestone
               <p className="mt-3 whitespace-pre-wrap text-sm leading-6 text-[#64726b]">{task.nextAction}</p>
             </>}
           </article>;
-        }) : <div className="rounded-xl bg-[#f5f7f2] p-4 text-sm text-[#64726b]">No weekly tasks yet.</div>}
+        }) : <div className="rounded-xl bg-white/35 backdrop-blur-xl p-4 text-sm text-[#64726b]">No weekly tasks yet.</div>}
       </div>
-    </article> : <button className="flex items-center justify-between gap-4 rounded-2xl border border-[#dce4dd] bg-white p-7 text-left" onClick={() => setTasksOpen(true)} type="button">
+    </article> : <button className="flex items-center justify-between gap-4 rounded-2xl border border-[#dce4dd]/70 bg-white/70 backdrop-blur-xl p-7 text-left" onClick={() => setTasksOpen(true)} type="button">
       <span><span className="block text-[10px] font-bold tracking-[.14em] text-[#64726b]">TASKS</span><span className="mt-2 block font-serif text-2xl text-[#16231e]">Weekly tasks</span></span>
-      <span className="grid size-10 shrink-0 place-items-center rounded-lg bg-[#163c30] text-white"><ChevronDownIcon /></span>
+      <span className="grid size-10 shrink-0 place-items-center rounded-lg bg-[#163c30]/85 backdrop-blur-xl text-white"><ChevronDownIcon /></span>
     </button>}
     {error ? <p className="text-sm font-bold text-red-700">{error}</p> : null}
   </section>;

@@ -9,7 +9,7 @@ export default async function WeeklyHistoryPage() {
   if (!overview?.vision) return <EmptyWorkspaceCard />;
 
   return <DashboardShell active="Weekly history">
-    <PageHeader eyebrow="EXECUTION OS" title="Weekly history" action={<Link className="rounded-lg border border-[#cad5cb] bg-white px-4 py-3 text-sm font-bold text-[#163c30]" href="/dashboard/week">Current week</Link>}>
+    <PageHeader eyebrow="EXECUTION OS" title="Weekly history" action={<Link className="rounded-lg border border-[#cad5cb]/70 bg-white/70 backdrop-blur-xl px-4 py-3 text-sm font-bold text-[#163c30]" href="/dashboard/week">Current week</Link>}>
       Review saved weekly dashboards from previous Sunday-start weeks.
     </PageHeader>
     <WeeklyHistoryList />

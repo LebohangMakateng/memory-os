@@ -107,36 +107,36 @@ export function OpportunityManager({ initiatives, opportunities }: { initiatives
   if (!opportunities.length) return <p className="mt-5 text-sm text-[#64726b]">No inbox items.</p>;
 
   return <div className="mt-5 grid gap-3">
-    {opportunities.map((opportunity) => <div className="rounded-lg bg-[#f5f7f2] p-4" key={opportunity.id}>
+    {opportunities.map((opportunity) => <div className="rounded-lg bg-white/35 backdrop-blur-xl p-4" key={opportunity.id}>
       {editingId === opportunity.id ? <form className="grid gap-3" onSubmit={(event) => submitEdit(event, opportunity.id)}>
-        <input className="rounded-lg border border-[#cad5cb] bg-white px-3 py-2 text-sm" defaultValue={opportunity.title} name="title" required />
-        <textarea className="min-h-20 rounded-lg border border-[#cad5cb] bg-white px-3 py-2 text-sm" defaultValue={opportunity.note ?? ""} name="note" />
+        <input className="rounded-lg border border-[#cad5cb]/70 bg-white/70 backdrop-blur-xl px-3 py-2 text-sm" defaultValue={opportunity.title} name="title" required />
+        <textarea className="min-h-20 rounded-lg border border-[#cad5cb]/70 bg-white/70 backdrop-blur-xl px-3 py-2 text-sm" defaultValue={opportunity.note ?? ""} name="note" />
         <div className="flex flex-wrap gap-2">
-          <button className="rounded-lg bg-[#163c30] px-3 py-2 text-xs font-bold text-white disabled:opacity-60" disabled={pendingId === opportunity.id} type="submit">
+          <button className="rounded-lg bg-[#163c30]/85 backdrop-blur-xl px-3 py-2 text-xs font-bold text-white disabled:opacity-60" disabled={pendingId === opportunity.id} type="submit">
             {pendingId === opportunity.id ? "Saving..." : "Save"}
           </button>
-          <button className="rounded-lg border border-[#cad5cb] px-3 py-2 text-xs font-bold text-[#163c30]" onClick={() => setEditingId("")} type="button">Cancel</button>
+          <button className="rounded-lg border border-[#cad5cb]/70 px-3 py-2 text-xs font-bold text-[#163c30]" onClick={() => setEditingId("")} type="button">Cancel</button>
         </div>
       </form> : convertingId === opportunity.id ? <form className="grid gap-3" onSubmit={(event) => convertOpportunity(event, opportunity)}>
-        <select className="rounded-lg border border-[#cad5cb] bg-white px-3 py-2 text-sm" name="initiativeId" required>
+        <select className="rounded-lg border border-[#cad5cb]/70 bg-white/70 backdrop-blur-xl px-3 py-2 text-sm" name="initiativeId" required>
           <option value="">Choose initiative</option>
           {initiatives.map((initiative) => <option key={initiative.id} value={initiative.id}>{initiative.title}</option>)}
         </select>
-        <input className="rounded-lg border border-[#cad5cb] bg-white px-3 py-2 text-sm" defaultValue={opportunity.title} name="title" required />
-        <textarea className="min-h-20 rounded-lg border border-[#cad5cb] bg-white px-3 py-2 text-sm" defaultValue={opportunity.note ?? opportunity.title} name="purpose" required />
+        <input className="rounded-lg border border-[#cad5cb]/70 bg-white/70 backdrop-blur-xl px-3 py-2 text-sm" defaultValue={opportunity.title} name="title" required />
+        <textarea className="min-h-20 rounded-lg border border-[#cad5cb]/70 bg-white/70 backdrop-blur-xl px-3 py-2 text-sm" defaultValue={opportunity.note ?? opportunity.title} name="purpose" required />
         <div className="flex flex-wrap gap-2">
-          <button className="rounded-lg bg-[#163c30] px-3 py-2 text-xs font-bold text-white disabled:opacity-60" disabled={pendingId === opportunity.id || !initiatives.length} type="submit">{pendingId === opportunity.id ? "Converting..." : "Create project"}</button>
-          <button className="rounded-lg border border-[#cad5cb] px-3 py-2 text-xs font-bold text-[#163c30]" onClick={() => setConvertingId("")} type="button">Cancel</button>
+          <button className="rounded-lg bg-[#163c30]/85 backdrop-blur-xl px-3 py-2 text-xs font-bold text-white disabled:opacity-60" disabled={pendingId === opportunity.id || !initiatives.length} type="submit">{pendingId === opportunity.id ? "Converting..." : "Create project"}</button>
+          <button className="rounded-lg border border-[#cad5cb]/70 px-3 py-2 text-xs font-bold text-[#163c30]" onClick={() => setConvertingId("")} type="button">Cancel</button>
         </div>
         {!initiatives.length ? <p className="text-xs text-[#64726b]">Create an initiative before converting opportunities.</p> : null}
       </form> : <>
         <p className="text-sm font-bold">{opportunity.title}</p>
         {opportunity.note ? <p className="mt-1 text-xs leading-5 text-[#64726b]">{opportunity.note}</p> : null}
         <div className="mt-3 flex flex-wrap gap-2">
-          <button className="rounded-lg border border-[#cad5cb] px-3 py-2 text-xs font-bold text-[#163c30]" onClick={() => setEditingId(opportunity.id)} type="button">Edit</button>
-          <button className="rounded-lg border border-[#cad5cb] px-3 py-2 text-xs font-bold text-[#163c30]" onClick={() => setConvertingId(opportunity.id)} type="button">Convert</button>
-          <button className="rounded-lg border border-[#cad5cb] px-3 py-2 text-xs font-bold text-[#163c30] disabled:opacity-60" disabled={pendingId === opportunity.id} onClick={() => updateOpportunity(opportunity.id, { status: "reviewed" })} type="button">Mark reviewed</button>
-          <button className="rounded-lg border border-[#cad5cb] px-3 py-2 text-xs font-bold text-[#163c30] disabled:opacity-60" disabled={pendingId === opportunity.id} onClick={() => updateOpportunity(opportunity.id, { status: "deferred" })} type="button">Defer</button>
+          <button className="rounded-lg border border-[#cad5cb]/70 px-3 py-2 text-xs font-bold text-[#163c30]" onClick={() => setEditingId(opportunity.id)} type="button">Edit</button>
+          <button className="rounded-lg border border-[#cad5cb]/70 px-3 py-2 text-xs font-bold text-[#163c30]" onClick={() => setConvertingId(opportunity.id)} type="button">Convert</button>
+          <button className="rounded-lg border border-[#cad5cb]/70 px-3 py-2 text-xs font-bold text-[#163c30] disabled:opacity-60" disabled={pendingId === opportunity.id} onClick={() => updateOpportunity(opportunity.id, { status: "reviewed" })} type="button">Mark reviewed</button>
+          <button className="rounded-lg border border-[#cad5cb]/70 px-3 py-2 text-xs font-bold text-[#163c30] disabled:opacity-60" disabled={pendingId === opportunity.id} onClick={() => updateOpportunity(opportunity.id, { status: "deferred" })} type="button">Defer</button>
           <button className="rounded-lg border border-[#d7c0bb] px-3 py-2 text-xs font-bold text-[#8f2f1f] disabled:opacity-60" disabled={pendingId === opportunity.id} onClick={() => archiveOpportunity(opportunity.id)} type="button">Archive</button>
         </div>
       </>}
