@@ -9,7 +9,8 @@
     "lint": "eslint",
     "db:migrate": "supabase db push",
     "db:link": "supabase link --project-ref codlssgtqxnpqnfjzxef",
-    "db:migration:new": "supabase migration new"
+    "db:migration:new": "supabase migration new",
+    "test": "tsx --test src/**/*.test.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.112.3",

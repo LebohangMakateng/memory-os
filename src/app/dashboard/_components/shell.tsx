@@ -7,6 +7,7 @@ const defaultItems: NavItem[] = [
   { href: "/", label: "Overview" },
   { href: "/dashboard/week", label: "Weekly planning" },
   { href: "/dashboard/quick-notes", label: "Quick Notes" },
+  { href: "/dashboard/finance", label: "Finance" },
   { href: "/dashboard/projects", label: "Projects" },
   { href: "/dashboard/opportunities", label: "Opportunities" },
   { href: "/dashboard/planning", label: "AI planning" },
