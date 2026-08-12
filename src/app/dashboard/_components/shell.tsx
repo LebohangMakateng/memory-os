@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { AffirmationBanner } from "./affirmation-banner";
 
 type NavItem = { href: string; label: string; active?: boolean };
 
@@ -27,6 +28,7 @@ export function DashboardShell({ children, active }: { children: ReactNode; acti
       </div>
     </aside>
     <section className="mx-auto w-full max-w-6xl px-5 py-9 md:px-14 md:py-12">
+      <AffirmationBanner />
       <div className="mb-6 flex gap-2 overflow-x-auto md:hidden">
         {items.map((item) => <Link className={item.active ? "shrink-0 rounded-lg bg-[#163c30]/85 backdrop-blur-xl px-3 py-2 text-xs font-bold text-white" : "shrink-0 rounded-lg border border-[#cad5cb]/70 px-3 py-2 text-xs font-bold text-[#163c30]"} href={item.href} key={item.href}>{item.label}</Link>)}
       </div>
