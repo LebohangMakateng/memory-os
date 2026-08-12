@@ -22,9 +22,9 @@ export function DashboardShell({ children, active }: { children: ReactNode; acti
       <nav className="grid gap-1 text-sm">
         {items.map((item) => <Link className={item.active ? "rounded-lg bg-white/10 px-3 py-3 font-bold" : "rounded-lg px-3 py-3 text-[#bbcac0]"} href={item.href} key={item.href}>{item.label}</Link>)}
       </nav>
-      <div className="mt-auto border-t border-white/15 px-3 pt-5">
+      <div className="mt-5 border-t border-white/15 px-3 pt-5">
         <p className="mb-2 text-[10px] font-bold tracking-[.14em] text-[#9db2a5]">OPERATING PRINCIPLE</p>
-        <p className="font-serif text-lg leading-tight">Share everything<br />I build.</p>
+        <p className="font-serif text-sm leading-snug">LUCK SURFACE AREA =<br />DOING THINGS +<br />TELLING PEOPLE ABOUT THEM</p>
       </div>
     </aside>
     <section className="mx-auto w-full max-w-6xl px-5 py-9 md:px-14 md:py-12">
